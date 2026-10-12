@@ -1,0 +1,24 @@
+[
+  {
+    "layer": "reference",
+    "file": "docs/content/migrate/v3.md",
+    "line": 1309,
+    "quote": "https://gateway-api.sigs.k8s.io/api-types/grpcroute/",
+    "reasoning": "External URL returned HTTP 404",
+    "suggested_fix": "(needs a human to find the current URL)",
+    "severity": "blocking",
+    "confidence": 0.9,
+    "auto_fixable": false
+  },
+  {
+    "layer": "reference",
+    "file": "docs/content/migrate/v3.md",
+    "line": 1341,
+    "quote": "https://gateway-api.sigs.k8s.io/api-types/backendtlspolicy/",
+    "reasoning": "External URL returned HTTP 404",
+    "suggested_fix": "(needs a human to find the current URL)",
+    "severity": "blocking",
+    "confidence": 0.9,
+    "auto_fixable": false
+  }
+]

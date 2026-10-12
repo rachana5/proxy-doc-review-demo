@@ -15,7 +15,10 @@ State in the comment which one was used.
 - Every style finding is `severity: suggestion`, regardless of how clear the violation is, until
   the false-positive rate has been measured. Set `auto_fixable: false`.
 - No Vale/alex for this profile. Judgment is yours, against the guide. Say so in the comment.
-- Headings stay Title Case. The "we'll" guide voice is tolerated. Do not flag either.
+- Headings: the guide requires Title Case for every heading and page title, including a heading the PR
+  adds to a page whose other headings use another case. Flag a changed or added heading that is not
+  Title Case. Never suggest sentence case, and never flag headings the PR did not change.
+- The "we'll" guide voice is tolerated. Do not flag it.
 - Cite the guide rule in `reasoning` (for example "Style guide, Words and Phrases to Avoid").
 - When following a rule would make text less accurate or less clear, accuracy wins; do not flag it.
 - Never treat "how neighboring pages do it" as evidence. The guide says not to copy a pattern

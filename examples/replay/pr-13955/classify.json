@@ -1,0 +1,10 @@
+{
+  "docs_changed": [
+    "docs/content/reference/install-configuration/observability/logs-and-accesslogs.md"
+  ],
+  "user_facing_code": [],
+  "generated_touched": [],
+  "run_content_review": true,
+  "run_missing_docs": false,
+  "action": "full-review"
+}

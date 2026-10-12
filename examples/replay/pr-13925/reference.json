@@ -1,0 +1,13 @@
+[
+  {
+    "layer": "reference",
+    "file": "docs/content/reference/routing-configuration/kubernetes/ingress-nginx.md",
+    "line": 404,
+    "quote": "[install configuration](../../../install-configuration/observability/logs-and-accesslogs/#accesslogs)",
+    "reasoning": "The anchor fix is correct (the target heading is `## AccessLogs`, so `#accesslogs` resolves; the old `#access-logs` did not). The link still uses the rendered-URL form while the other links this PR touches were converted to source `.md` paths. Both resolve in the built site; the .md form also lets the MkDocs link validation catch breakage. Low-value consistency note. (scripts.check_links reported this link as broken because it resolves directory-style URLs on disk; that is a checker false positive, as are its 4 other findings on unchanged lines 372, 410-412.)",
+    "suggested_fix": "[install configuration](../../install-configuration/observability/logs-and-accesslogs.md#accesslogs)",
+    "severity": "suggestion",
+    "confidence": 0.35,
+    "auto_fixable": false
+  }
+]

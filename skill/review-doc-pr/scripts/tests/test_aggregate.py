@@ -291,3 +291,10 @@ def test_main_passes_mode_and_layers_run_flags(tmp_path, capsys):
     assert exit_code == 0
     output = capsys.readouterr().out
     assert "Mode: strict | Layers: accuracy,style" in output
+
+
+def test_headline_is_first_sentence_and_capped():
+    from scripts.aggregate import headline
+    assert headline("First sentence. Second sentence with detail.") == "First sentence."
+    long = "x" * 300
+    assert len(headline(long)) == 140 and headline(long).endswith("…")

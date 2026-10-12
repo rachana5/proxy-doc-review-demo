@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import unicodedata
 import urllib.request
 import urllib.error
 from pathlib import Path
@@ -141,6 +142,182 @@ def check_internal_link(link_target: str, source_file: Path, repo_root: Path) ->
     )
 
 
+# --- MkDocs mode -----------------------------------------------------------
+# MkDocs (use_directory_urls, the default) serves docs/a/b/page.md at /a/b/page/
+# and docs/a/b/index.md at /a/b/. Only links ending in ".md" are rewritten by
+# MkDocs; any other relative link is left as-is and resolved by the BROWSER
+# against the page's rendered URL. Resolving those against the source file's
+# directory (the default mode above) false-flags every directory-style link.
+_INDEX_NAMES = ("index.md", "README.md")
+_HEADING_RE = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")
+_ID_ATTR_RE = re.compile(r"""\bid\s*=\s*["']([^"']+)["']""")
+_ATTR_LIST_RE = re.compile(r"\{[^}]*#([A-Za-z0-9_\-:.]+)[^}]*\}")
+_INCLUDE_RE = re.compile(r"""\{%\s*include(?:-markdown)?\s+["']([^"']+)["'][^%]*%\}|--8<--\s*["']([^"']+)["']""")
+_OTHER_TEMPLATE_RE = re.compile(r"\{%|\{\{")  # any template syntax left after includes are resolved
+
+
+def _slugify(text: str) -> str:
+    """python-markdown toc slugify: NFKD to ascii, drop non-word chars, lowercase, hyphenate."""
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    text = re.sub(r"[^\w\s-]", "", text).strip().lower()
+    return re.sub(r"[-\s]+", "-", text)
+
+
+def _heading_text(raw: str) -> str:
+    raw = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", raw)   # [text](url) -> text
+    raw = re.sub(r"<[^>]+>", "", raw)                         # inline html
+    raw = raw.replace("`", "")
+    raw = re.sub(r"[*_]{1,3}([^*_]+)[*_]{1,3}", r"\1", raw)    # emphasis
+    return _ATTR_LIST_RE.sub("", raw).strip()
+
+
+def _strip_fences(text: str) -> str:
+    out, in_fence = [], False
+    for line in text.splitlines():
+        if line.strip().startswith(("```", "~~~")):
+            in_fence = not in_fence
+            continue
+        if not in_fence:
+            out.append(line)
+    return "\n".join(out)
+
+
+def _resolve_includes(text: str, page_dir: Path | None, docs_root: Path | None) -> str | None:
+    """Inline include-markdown / snippet includes so their anchors count.
+    Returns None if any include cannot be found or other template syntax
+    remains, because then a missing anchor can't be proven missing."""
+    def find(name: str) -> str | None:
+        for base in (docs_root, page_dir):
+            if base is not None and (base / name).is_file():
+                return (base / name).read_text(encoding="utf-8")
+        return None
+
+    for _ in range(2):  # includes inside includes, one extra level
+        missing = False
+
+        def sub(m: re.Match) -> str:
+            nonlocal missing
+            body = find(m.group(1) or m.group(2))
+            if body is None:
+                missing = True
+                return ""
+            return body
+
+        text = _INCLUDE_RE.sub(sub, text)
+        if missing:
+            return None
+    if _OTHER_TEMPLATE_RE.search(_strip_fences(text)):
+        return None
+    return text
+
+
+def collect_anchors(markdown_text: str, *, page_dir: Path | None = None,
+                    docs_root: Path | None = None) -> set[str] | None:
+    """All anchors a page defines: heading slugs (with python-markdown's _1, _2
+    duplicate suffixes), explicit id="..." attributes, and {#id} attr lists,
+    including those from include-markdown / snippet includes. Returns None when
+    the page uses template syntax this checker can't expand."""
+    resolved = _resolve_includes(markdown_text, page_dir, docs_root)
+    if resolved is None:
+        return None
+    markdown_text = resolved
+    anchors: set[str] = set(_ID_ATTR_RE.findall(markdown_text))
+    seen: dict[str, int] = {}
+    in_fence = False
+    for line in markdown_text.splitlines():
+        if line.strip().startswith(("```", "~~~")):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        m = _HEADING_RE.match(line)
+        if not m:
+            continue
+        explicit = _ATTR_LIST_RE.search(m.group(2))
+        if explicit:
+            anchors.add(explicit.group(1))
+            continue
+        slug = _slugify(_heading_text(m.group(2)))
+        if not slug:
+            continue
+        n = seen.get(slug, 0)
+        seen[slug] = n + 1
+        anchors.add(slug if n == 0 else f"{slug}_{n}")
+    return anchors
+
+
+def _mkdocs_page_dir(source_file: Path) -> Path:
+    """Directory the browser resolves relative URLs against for this page."""
+    if source_file.name in _INDEX_NAMES:
+        return source_file.parent
+    return source_file.parent / source_file.stem
+
+
+def _mkdocs_target_file(path_part: str, source_file: Path, docs_root: Path) -> Path | None:
+    """Resolve a link path to the markdown file (or asset) it serves, or None."""
+    if path_part.startswith("/"):
+        base = docs_root / path_part.lstrip("/")
+    elif path_part.endswith(".md"):
+        base = source_file.parent / path_part              # rewritten by MkDocs
+    elif (source_file.parent / path_part.rstrip("/")).resolve().is_file():
+        # Media/asset files (png, yml, ...) are also rewritten by MkDocs,
+        # relative to the SOURCE file, not the rendered page URL.
+        return (source_file.parent / path_part.rstrip("/")).resolve()
+    else:
+        base = _mkdocs_page_dir(source_file) / path_part   # resolved by the browser
+    base = Path(str(base).rstrip("/")) if path_part.endswith("/") else base
+    candidates = [base]
+    if base.suffix != ".md":
+        candidates += [Path(str(base) + ".md")] + [base / n for n in _INDEX_NAMES]
+    for c in candidates:
+        c = c.resolve()
+        if c.is_file():
+            return c
+    return None
+
+
+def check_internal_link_mkdocs(link_target: str, source_file: Path, repo_root: Path,
+                               docs_root: Path) -> dict | None:
+    path_part, _, fragment = link_target.partition("#")
+    if path_part:
+        target = _mkdocs_target_file(path_part, source_file, docs_root)
+        if target is None:
+            # An existing directory with no index page still means the link is wrong in MkDocs.
+            try:
+                shown = (source_file.parent / path_part).resolve().relative_to(repo_root.resolve())
+            except ValueError:
+                shown = path_part
+            return make_finding(
+                layer="reference", file=str(source_file), line=0, quote=link_target,
+                reasoning=f"Link target does not resolve to a page in the built site: {path_part} (looked near {shown})",
+                suggested_fix="(needs a human to identify the correct target)",
+                severity="blocking", confidence=0.9, auto_fixable=_NO_SAFE_AUTOFIX,
+            )
+    else:
+        target = source_file.resolve()
+    if not fragment or target.suffix != ".md":
+        return None
+    try:
+        anchors = collect_anchors(target.read_text(encoding="utf-8"),
+                                  page_dir=target.parent, docs_root=docs_root)
+    except (OSError, UnicodeDecodeError):
+        return None
+    if anchors is None or fragment in anchors or fragment.lower() in anchors:
+        return None
+    try:
+        shown = target.relative_to(repo_root.resolve())
+    except ValueError:
+        shown = target
+    near = sorted(a for a in anchors if fragment.lower()[:6] in a)[:3]
+    hint = f" Similar anchors on that page: {', '.join(near)}." if near else ""
+    return make_finding(
+        layer="reference", file=str(source_file), line=0, quote=link_target,
+        reasoning=f"Anchor #{fragment} does not exist in {shown}.{hint}",
+        suggested_fix="(needs a human to pick the correct anchor)",
+        severity="blocking", confidence=0.8, auto_fixable=_NO_SAFE_AUTOFIX,
+    )
+
+
 # urllib's default User-Agent ("Python-urllib/x.y") gets a flat 403 from
 # some sites' bot protection (confirmed against https://traefik.io itself —
 # curl with a browser UA gets a clean 308 redirect, urllib with no UA gets
@@ -218,7 +395,8 @@ def check_external_link(url: str, *, timeout: float = 10.0) -> dict | None:
     return None
 
 
-def run(target_files: list[Path], repo_root: Path) -> list[dict]:
+def run(target_files: list[Path], repo_root: Path, *, engine: str = "files",
+        docs_root: Path | None = None) -> list[dict]:
     findings: list[dict] = []
     # Cache external-link results per URL for this run: the same third-party
     # reference commonly appears across many pages, and re-checking it once
@@ -251,7 +429,10 @@ def run(target_files: list[Path], repo_root: Path) -> list[dict]:
                 # occurrences' recorded locations.
                 finding = dict(cached) if cached is not None else None
             else:
-                finding = check_internal_link(target, file, repo_root)
+                if engine == "mkdocs":
+                    finding = check_internal_link_mkdocs(target, file, repo_root, docs_root or repo_root)
+                else:
+                    finding = check_internal_link(target, file, repo_root)
             if finding is not None:
                 finding["file"] = str(file)
                 finding["line"] = lineno
@@ -263,8 +444,13 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("files", nargs="+")
     parser.add_argument("--repo-root", required=True)
+    parser.add_argument("--engine", choices=["files", "mkdocs"], default="files",
+                        help="'mkdocs' resolves directory-style URLs like the built site and checks #anchors")
+    parser.add_argument("--docs-root", default=None, help="docs directory (mkdocs mode), e.g. docs/content")
     args = parser.parse_args(argv)
-    findings = run([Path(f) for f in args.files], Path(args.repo_root))
+    root = Path(args.repo_root)
+    findings = run([Path(f) for f in args.files], root, engine=args.engine,
+                   docs_root=(root / args.docs_root) if args.docs_root else root)
     print(json.dumps(findings))
     return 0
 

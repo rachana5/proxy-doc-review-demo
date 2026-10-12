@@ -1,0 +1,13 @@
+[
+  {
+    "layer": "completeness",
+    "file": "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+    "line": 57,
+    "quote": "The `Host` matcher supports a wildcard prefix to match the subdomains of a domain.",
+    "reasoning": "pkg/muxer/http/matcher.go:88-90 now makes the Host matcher return an error for any wildcard that is not the catch-all `*` or a `*.`/`**.` prefix (for example `Host(`foo.*.com`)` or `Host(`*foo.com`)`). That is a user-visible change in what a router rule accepts, and the page does not say where a wildcard may appear. Confirm whether such rules were previously accepted before documenting.",
+    "suggested_fix": "Add after the wildcard description: \"A wildcard is valid only as a leading `*.` or `**.` label, or as the catch-all `Host(`*`)`. A rule with a wildcard anywhere else is invalid.\"",
+    "severity": "suggestion",
+    "confidence": 0.45,
+    "auto_fixable": false
+  }
+]

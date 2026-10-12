@@ -37,13 +37,11 @@ code (`traefik-hub` for Hub docs, `traefik/traefik` for Proxy docs).
    category "unverifiable" — rather than silently skipping it. Use
    `severity: suggestion` and `confidence` low enough that it won't
    auto-fix (an unverifiable claim should never be auto-rewritten).
-5. Check the branch the feature actually ships from, not just the repo's
-   default branch. A Hub feature documented under an Early Access badge
-   often lives on a release branch (e.g. `v3.21`) ahead of, or diverged
-   from, `main` — a field, default, or behavior can differ between them,
-   and `main` can even be missing a fix that already shipped on the
-   release branch. Confirm which branch the doc's own version/badge
-   targets before treating `main` as ground truth.
+5. Check the branch the PR targets, not just the default branch. Proxy
+   fixes land on a maintenance branch (for example `v3.7`) and are merged
+   forward into `master`, so a field, default, or behavior can differ
+   between them. For a PR, the code at the PR head is the primary evidence;
+   use the base branch for anything the PR didn't touch.
 6. If a claim traces back to a reviewer's or generator's own suggested
    wording rather than the doc author's, verify it against source
    independently rather than trusting it at face value — a suggestion
@@ -72,16 +70,16 @@ code (`traefik-hub` for Hub docs, `traefik/traefik` for Proxy docs).
 
 ## Example
 
-**Doc text:** "The default value for `maxRetries` is 3."
-**Source:** `traefik-hub/middleware/retry.go:88` — `DefaultMaxRetries = 5`
+**Doc text:** "| `maxRequestBodyBytes` | ... | 1MB | No |"
+**Source:** `pkg/config/dynamic/middlewares.go:17`: `RetryDefaultMaxRequestBodyBytes = 2 * 1024 * 1024`
 
 ```json
 {
   "layer": "accuracy",
-  "quote": "The default value for maxRetries is 3.",
-  "reasoning": "traefik-hub source (middleware/retry.go:88) sets the default to 5, not 3.",
-  "suggested_fix": "The default value for maxRetries is 5.",
+  "quote": "| 1MB | No |",
+  "reasoning": "The default is 2 MB. RetryDefaultMaxRequestBodyBytes is 2 * 1024 * 1024 (pkg/config/dynamic/middlewares.go:17) and pkg/middlewares/retry/retry.go:109 uses it when the option is unset.",
+  "suggested_fix": "Change the Default cell to 2MB.",
   "severity": "blocking",
-  "confidence": 0.9
+  "confidence": 0.95
 }
 ```

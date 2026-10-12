@@ -41,3 +41,12 @@ def test_generated_file_edit_is_reported():
     r = missing_docs.classify(
         ["docs/content/reference/install-configuration/configuration-options.md"], PROXY)
     assert r["generated_touched"]
+
+
+def test_muxer_and_acme_map_to_their_doc_areas():
+    r = missing_docs.classify(["pkg/muxer/http/matcher.go", "pkg/provider/acme/provider.go"], PROXY)
+    areas = {e["file"]: e["doc_targets"] for e in r["user_facing_code"]}
+    assert any("rules-and-priority" in t for t in areas["pkg/muxer/http/matcher.go"])
+    assert areas["pkg/provider/acme/provider.go"] == [
+        "docs/content/reference/install-configuration/tls/certificate-resolvers/"
+    ]

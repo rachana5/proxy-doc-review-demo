@@ -1,0 +1,13 @@
+[
+  {
+    "layer": "style",
+    "file": "docs/content/migrate/v3.md",
+    "line": 47,
+    "quote": "As ACME only issues single-level wildcard certificates, the ACME certificate resolvers refuse a `**.example.com` domain,",
+    "reasoning": "Style guide, Voice: do not state how a third-party service behaves unless its documentation or the source says so. The Go comment (pkg/provider/acme/provider.go:1063) states it, but the migration text gives the reader no link; acme.md already links Let's Encrypt for the related wildcard limit.",
+    "suggested_fix": "As [ACME only issues single-level wildcard certificates](../reference/install-configuration/tls/certificate-resolvers/acme.md#domain-definition), the ACME certificate resolvers refuse a `**.example.com` domain,",
+    "severity": "suggestion",
+    "confidence": 0.35,
+    "auto_fixable": false
+  }
+]

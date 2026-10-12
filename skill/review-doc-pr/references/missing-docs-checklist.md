@@ -5,7 +5,12 @@ Goal: for each user-facing code change in the PR (from `scripts.missing_docs`'s
 already provides it, and if not, draft what to write.
 
 Findings use the `completeness` layer, always `severity: suggestion`,
-`auto_fixable: false`, `confidence` below 0.8.
+`auto_fixable: false`. Calibrate `confidence` between 0.4 and 0.79, never 0.8 or
+above: there is no ground truth for "docs are needed", only the code evidence.
+Emit one finding per user-facing change. If one change needs several edits (a
+rule page and a priority sentence, for example), put them all in that finding's
+`suggested_fix`. A new validation error or stricter input check is part of the
+same finding as the option it guards.
 
 ## Steps, per entry in `user_facing_code`
 
@@ -42,4 +47,4 @@ Findings use the `completeness` layer, always `severity: suggestion`,
   ("Add a row to the Configuration Options table:").
 
 If you cannot tell whether a change is user-facing, emit one `suggestion` that says so with
-confidence 0.4 rather than guessing. Never emit more than one finding per option.
+confidence 0.4 rather than guessing. Never emit more than one finding per change.

@@ -1,0 +1,68 @@
+[
+  {
+    "layer": "reference",
+    "file": "docs/content/migrate/v3.md",
+    "line": 506,
+    "quote": "../reference/install-configuration/providers/kubernetes/kubernetes-gateway.md#opt-providers-kubernetesgateway-qps",
+    "reasoning": "Anchor #opt-providers-kubernetesgateway-qps does not exist in docs/content/reference/install-configuration/providers/kubernetes/kubernetes-gateway.md. Similar anchors on that page: opt-providers-kubernetesGateway-burst, opt-providers-kubernetesGateway-certAuthFilePath, opt-providers-kubernetesGateway-crossProviderNamespaces.",
+    "suggested_fix": "(needs a human to pick the correct anchor)",
+    "severity": "blocking",
+    "confidence": 0.8,
+    "auto_fixable": false
+  },
+  {
+    "layer": "reference",
+    "file": "docs/content/migrate/v3.md",
+    "line": 507,
+    "quote": "../reference/install-configuration/providers/kubernetes/kubernetes-gateway.md#opt-providers-kubernetesgateway-burst",
+    "reasoning": "Anchor #opt-providers-kubernetesgateway-burst does not exist in docs/content/reference/install-configuration/providers/kubernetes/kubernetes-gateway.md. Similar anchors on that page: opt-providers-kubernetesGateway-burst, opt-providers-kubernetesGateway-certAuthFilePath, opt-providers-kubernetesGateway-crossProviderNamespaces.",
+    "suggested_fix": "(needs a human to pick the correct anchor)",
+    "severity": "blocking",
+    "confidence": 0.8,
+    "auto_fixable": false
+  },
+  {
+    "layer": "reference",
+    "file": "docs/content/migrate/v3.md",
+    "line": 738,
+    "quote": "../reference/install-configuration/providers/kubernetes/kubernetes-gateway.md#opt-providers-kubernetesgateway-qps",
+    "reasoning": "Anchor #opt-providers-kubernetesgateway-qps does not exist in docs/content/reference/install-configuration/providers/kubernetes/kubernetes-gateway.md. Similar anchors on that page: opt-providers-kubernetesGateway-burst, opt-providers-kubernetesGateway-certAuthFilePath, opt-providers-kubernetesGateway-crossProviderNamespaces.",
+    "suggested_fix": "(needs a human to pick the correct anchor)",
+    "severity": "blocking",
+    "confidence": 0.8,
+    "auto_fixable": false
+  },
+  {
+    "layer": "reference",
+    "file": "docs/content/migrate/v3.md",
+    "line": 739,
+    "quote": "../reference/install-configuration/providers/kubernetes/kubernetes-gateway.md#opt-providers-kubernetesgateway-burst",
+    "reasoning": "Anchor #opt-providers-kubernetesgateway-burst does not exist in docs/content/reference/install-configuration/providers/kubernetes/kubernetes-gateway.md. Similar anchors on that page: opt-providers-kubernetesGateway-burst, opt-providers-kubernetesGateway-certAuthFilePath, opt-providers-kubernetesGateway-crossProviderNamespaces.",
+    "suggested_fix": "(needs a human to pick the correct anchor)",
+    "severity": "blocking",
+    "confidence": 0.8,
+    "auto_fixable": false
+  },
+  {
+    "layer": "reference",
+    "file": "docs/content/migrate/v3.md",
+    "line": 1319,
+    "quote": "https://gateway-api.sigs.k8s.io/api-types/grpcroute/",
+    "reasoning": "External URL returned HTTP 404",
+    "suggested_fix": "(needs a human to find the current URL)",
+    "severity": "blocking",
+    "confidence": 0.9,
+    "auto_fixable": false
+  },
+  {
+    "layer": "reference",
+    "file": "docs/content/migrate/v3.md",
+    "line": 1351,
+    "quote": "https://gateway-api.sigs.k8s.io/api-types/backendtlspolicy/",
+    "reasoning": "External URL returned HTTP 404",
+    "suggested_fix": "(needs a human to find the current URL)",
+    "severity": "blocking",
+    "confidence": 0.9,
+    "auto_fixable": false
+  }
+]

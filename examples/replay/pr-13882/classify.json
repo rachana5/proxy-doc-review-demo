@@ -1,0 +1,61 @@
+{
+  "docs_changed": [
+    "docs/content/migrate/v3.md",
+    "docs/content/reference/install-configuration/tls/certificate-resolvers/acme.md",
+    "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+    "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md"
+  ],
+  "user_facing_code": [
+    {
+      "file": "pkg/muxer/http/matcher.go",
+      "area": "Router rule matchers and priority",
+      "doc_targets": [
+        "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+        "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md"
+      ]
+    },
+    {
+      "file": "pkg/muxer/http/mux.go",
+      "area": "Router rule matchers and priority",
+      "doc_targets": [
+        "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+        "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md"
+      ]
+    },
+    {
+      "file": "pkg/muxer/muxer.go",
+      "area": "Router rule matchers and priority",
+      "doc_targets": [
+        "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+        "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md"
+      ]
+    },
+    {
+      "file": "pkg/muxer/tcp/matcher.go",
+      "area": "Router rule matchers and priority",
+      "doc_targets": [
+        "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+        "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md"
+      ]
+    },
+    {
+      "file": "pkg/muxer/tcp/mux.go",
+      "area": "Router rule matchers and priority",
+      "doc_targets": [
+        "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+        "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md"
+      ]
+    },
+    {
+      "file": "pkg/provider/acme/provider.go",
+      "area": "ACME and certificate resolvers",
+      "doc_targets": [
+        "docs/content/reference/install-configuration/tls/certificate-resolvers/"
+      ]
+    }
+  ],
+  "generated_touched": [],
+  "run_content_review": true,
+  "run_missing_docs": true,
+  "action": "full-review"
+}

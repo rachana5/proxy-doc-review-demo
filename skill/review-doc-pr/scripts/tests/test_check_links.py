@@ -316,3 +316,73 @@ def test_main_prints_json_findings(tmp_path, monkeypatch, capsys):
     assert exit_code == 0
     findings = json.loads(capsys.readouterr().out)
     assert len(findings) == 1
+
+
+# --- MkDocs mode -----------------------------------------------------------
+import pytest  # noqa: E402
+
+from scripts import check_links as cl  # noqa: E402
+
+
+@pytest.fixture
+def site(tmp_path):
+    docs = tmp_path / "docs" / "content"
+    (docs / "routing" / "http").mkdir(parents=True)
+    (docs / "assets").mkdir()
+    (docs / "assets" / "pic.png").write_bytes(b"x")
+    (docs / "routing" / "http" / "router.md").write_text(
+        "# Router\n\n## Access Logs\n\n### Example of Depth & `X-Fwd`\n\n<a id=\"opt-rule\"></a>\n")
+    (docs / "routing" / "overview.md").write_text("# Overview\n")
+    (docs / "routing" / "index.md").write_text("# Routing\n")
+    return tmp_path, docs
+
+
+def _check(site, source_rel, target):
+    root, docs = site
+    return cl.check_internal_link_mkdocs(target, docs / source_rel, root, docs)
+
+
+def test_mkdocs_directory_style_url_resolves(site):
+    # page /routing/http/router/ links ../../overview/ -> /routing/overview/
+    assert _check(site, "routing/http/router.md", "../../overview/") is None
+
+
+def test_mkdocs_asset_link_resolves_from_source_file(site):
+    assert _check(site, "routing/overview.md", "../assets/pic.png") is None
+
+
+def test_mkdocs_missing_page_is_flagged(site):
+    f = _check(site, "routing/overview.md", "../../nope/")
+    assert f and "does not resolve" in f["reasoning"]
+
+
+def test_mkdocs_anchor_checks(site):
+    assert _check(site, "routing/overview.md", "http/router.md#access-logs") is None
+    assert _check(site, "routing/overview.md", "http/router.md#opt-rule") is None
+    assert _check(site, "routing/overview.md", "http/router.md#example-of-depth-x-fwd") is None
+    f = _check(site, "routing/overview.md", "http/router.md#access--logs")
+    assert f and "Anchor #access--logs does not exist" in f["reasoning"]
+
+
+def test_mkdocs_unresolvable_include_is_not_anchor_checked(site):
+    root, docs = site
+    (docs / "routing" / "inc.md").write_text("# Inc\n\n--8<-- \"missing-snippet.md\"\n")
+    assert _check(site, "routing/overview.md", "inc.md#from-the-include") is None
+
+
+def test_mkdocs_resolved_include_is_checked_and_its_anchors_count(site):
+    root, docs = site
+    (docs / "includes").mkdir()
+    (docs / "includes" / "banner.md").write_text("## Business Banner\n")
+    (docs / "routing" / "inc2.md").write_text(
+        '# Inc2\n\n## Real Heading\n\n{% include-markdown "includes/banner.md" %}\n')
+    assert _check(site, "routing/overview.md", "inc2.md#business-banner") is None   # from the include
+    assert _check(site, "routing/overview.md", "inc2.md#real-heading") is None
+    f = _check(site, "routing/overview.md", "inc2.md#nope")
+    assert f and "does not exist" in f["reasoning"]
+
+
+def test_mkdocs_template_braces_inside_code_fence_do_not_disable_checks(site):
+    root, docs = site
+    (docs / "routing" / "tpl.md").write_text("# Tpl\n\n```yaml\nname: {{ .Name }}\n```\n")
+    assert _check(site, "routing/overview.md", "tpl.md#missing")["reasoning"].startswith("Anchor #missing")

@@ -223,3 +223,28 @@ def test_main_applies_severity_cap_before_rendering(tmp_path, capsys):
     ])
     assert exit_code == 0
     assert "0 blocking, 1 suggestions" in capsys.readouterr().out
+
+
+def test_drop_outside_diff_removes_only_listed_layers_outside_the_diff():
+    from scripts import post_review as pr
+    ranges = {"a.md": [[10, 12]]}
+    fs = [
+        {"layer": "reference", "file": "a.md", "line": 99},   # outside, droppable
+        {"layer": "reference", "file": "a.md", "line": 11},   # inside, kept
+        {"layer": "accuracy", "file": "a.md", "line": 99},    # outside, other layer, kept
+        {"layer": "reference", "layers": ["reference", "style"], "file": "a.md", "line": 99},  # mixed, kept
+    ]
+    kept = pr.drop_outside_diff(fs, ranges, ["reference"])
+    assert [(f["layer"], f["line"]) for f in kept] == [("reference", 11), ("accuracy", 99), ("reference", 99)]
+
+
+def test_classify_silent_posts_nothing(tmp_path, capsys):
+    import json
+    from scripts import post_review as pr
+    for name, data in {"f.json": [], "c.json": {}, "k.json": {"action": "missing-docs-only"}}.items():
+        (tmp_path / name).write_text(json.dumps(data))
+    tmpl = tmp_path / "t.tmpl"; tmpl.write_text("x")
+    rc = pr.main(["--repo", "o/r", "--pr", "1", "--findings", str(tmp_path / "f.json"),
+                  "--changed-lines", str(tmp_path / "c.json"), "--template", str(tmpl),
+                  "--classify", str(tmp_path / "k.json"), "--dry-run"])
+    assert rc == 0 and "no comment posted" in capsys.readouterr().out

@@ -87,7 +87,17 @@ All five layers run over `docs_changed`. Scope differs:
 
 Each layer writes `<layer>.json` in the shape of `references/finding-schema.md`. If
 `run_style_lint.py` ran, unwrap its dict output first; for Proxy no linter runs, so style is
-agent-only and the comment says so. Validate every file:
+agent-only and the comment says so. Write `[]` for a layer with no findings.
+
+Reference layer, mechanical part. Proxy docs are MkDocs, so pass the engine and docs root; the
+default mode would false-flag every directory-style link and does not check anchors:
+
+```bash
+PYTHONPATH="${CLAUDE_SKILL_DIR}" python3 -m scripts.check_links --repo-root <root> \
+  --engine mkdocs --docs-root docs/content <changed doc files> > reference.json
+```
+
+Append your judgment findings (missing links on changed lines) to that list. Validate every file:
 
 ```bash
 PYTHONPATH="${CLAUDE_SKILL_DIR}" python3 -m scripts._finding <layer>.json
@@ -122,13 +132,17 @@ Always pass `--quiet`: the console echo is uncapped and can disagree with the po
 ```bash
 PYTHONPATH="${CLAUDE_SKILL_DIR}" python3 -m scripts.post_review \
   --repo <owner/repo> --pr <pr> --findings merged.json \
-  --changed-lines changed-lines.json --template templates/pr-comment.md.tmpl
+  --changed-lines changed-lines.json --template templates/pr-comment.md.tmpl \
+  --profile proxy --classify classify.json
 ```
 
-Add `--dry-run` to print the comment without posting (use it first on any live repo).
-Zero findings renders a short "no issues found" comment; a `missing-docs-only` run with zero
-findings posts nothing. If the marker `<!-- review-doc-pr:v1 -->` is already on the PR, the run
-skips: it is a duplicate invocation, not an update.
+`--profile` applies the profile's `drop_outside_diff_layers` (Proxy: `reference`): a dead link on a
+line the PR did not change is not shown. `--classify` applies the silence rules from Step 2: `silent`,
+or `missing-docs-only` with zero findings, posts nothing and exits 0 (no hand-written files needed).
+Add `--dry-run` to print the comment without posting (use it first on any live repo). A `full-review`
+with zero findings renders a short "no issues found" comment. If the marker
+`<!-- review-doc-pr:v1 -->` is already on the PR, the run skips: it is a duplicate invocation,
+not an update.
 
 ## Error handling
 

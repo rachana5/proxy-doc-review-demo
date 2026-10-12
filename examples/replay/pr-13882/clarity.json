@@ -1,0 +1,24 @@
+[
+  {
+    "layer": "clarity",
+    "file": "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+    "line": 241,
+    "quote": "The stars of a double wildcard host do not count toward this length,\nso that it always ranks below the single wildcard and the exact hosts it covers:",
+    "reasoning": "Style guide, Clarity Rules: name the concrete noun instead of 'it'. In this sentence 'it' could refer to 'The stars', 'this length', or the host; only the host is meant.",
+    "suggested_fix": "The stars of a double wildcard host do not count toward this length,\nso that the double wildcard host always ranks below the single wildcard and the exact hosts it covers:",
+    "severity": "suggestion",
+    "confidence": 0.6,
+    "auto_fixable": false
+  },
+  {
+    "layer": "clarity",
+    "file": "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md",
+    "line": 219,
+    "quote": "The stars of a double wildcard host do not count toward this length,\nso that it always ranks below the single wildcard and the exact hosts it covers:",
+    "reasoning": "Style guide, Clarity Rules: name the concrete noun instead of 'it'. In this sentence 'it' could refer to 'The stars', 'this length', or the host; only the host is meant.",
+    "suggested_fix": "The stars of a double wildcard host do not count toward this length,\nso that the double wildcard host always ranks below the single wildcard and the exact hosts it covers:",
+    "severity": "suggestion",
+    "confidence": 0.6,
+    "auto_fixable": false
+  }
+]

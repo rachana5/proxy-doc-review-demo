@@ -79,6 +79,15 @@ def aggregate(layer_findings: dict[str, list[dict]]) -> list[dict]:
     return assign_ids(sort_findings(dedup_findings(all_findings)))
 
 
+def headline(reasoning: str, limit: int = 140) -> str:
+    """First sentence of `reasoning`, capped, for a collapsed <summary> line. The
+    full reasoning is rendered in the body via {{reasoning}}."""
+    text = " ".join(str(reasoning).split())
+    m = re.match(r"(.+?[.!?])(\s|$)", text)
+    first = m.group(1) if m else text
+    return first if len(first) <= limit else first[: limit - 1].rstrip() + "\u2026"
+
+
 def render_report(findings: list[dict], template_text: str, metadata: dict | None = None) -> str:
     """Minimal mustache-ish renderer: expands a single {{#findings}}...{{/findings}}
     block once per finding, substituting {{key}} placeholders. Also substitutes
@@ -122,6 +131,7 @@ def render_report(findings: list[dict], template_text: str, metadata: dict | Non
         for finding in findings:
             row = row_template
             row = row.replace("{{layers}}", ", ".join(finding.get("layers", [finding["layer"]])))
+            row = row.replace("{{headline}}", headline(finding.get("reasoning", "")))
             for key, value in finding.items():
                 row = row.replace("{{" + key + "}}", str(value))
             rows.append(row)

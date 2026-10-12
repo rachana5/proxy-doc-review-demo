@@ -25,19 +25,24 @@ already has a pattern for?"
    whose target doesn't actually cover what's being pointed at.
 2. **Convention adherence.** Does this repo already have an established pattern for this situation
    that the new content skips? Specifically:
-   - **Version-gating / Early Access.** If the change documents something not yet generally
-     available, is it flagged the way other EA content in this repo is (see
-     `docs/api-gateway/secure/middleware/oauth-token-exchange.md:15`, `:::warning Early Access`)?
-     Only raise this when there's a concrete signal the feature is gated (an issue/PR that says so,
-     a reference to an untagged version) — never guess at release status.
-   - **Migration notes.** If the change adds a new way to do something the reader might already be
-     doing another way, does it say whether/how to move from the old way (see
-     `docs/api-gateway/secure/middleware/jwt.md:257` for the pattern), or at minimum say plainly
-     that migration isn't covered yet? Silence is the failure mode, not the absence of a full guide.
-   - **Troubleshooting.** For a page describing a multi-component or operationally involved setup,
-     is there anywhere for the reader to land when a failure mode the page itself describes actually
-     happens (see `docs/api-gateway/expose/multi-cluster.md:986` for the pattern)? A one-line
-     pointer counts; total silence doesn't.
+   - **Version-gating / experimental features.** If the change documents something not yet
+     generally available, is it flagged the way other experimental content is (look under
+     `docs/content/reference/install-configuration/experimental/` for the pattern)? Only raise this
+     when there's a concrete signal the feature is gated (an issue/PR that says so, an
+     `experimental` config path, an untagged version) — never guess at release status. Per the style
+     guide, state version-specific behavior only for versions you verified.
+   - **Migration and deprecation notes.** If the change alters behavior existing users rely on
+     (a changed default, a stricter validation, a removed or renamed option), is there a note under
+     `docs/content/migrate/` (or `docs/content/deprecation/` for deprecations) the way earlier
+     behavior changes got one? A real replayed PR (double wildcard matchers) added exactly such a
+     note in `migrate/v3.md`. Silence on a user-visible breaking change is the failure mode, not the
+     absence of a full guide.
+   - **Every supported format.** If a new option is added to an example, is it added to every
+     format the page shows (Structured YAML/TOML, Labels, Tags, Kubernetes, CLI/Helm for install
+     configuration)? The style guide requires each format to produce the same configuration.
+   - **Generated reference.** If the change touches an option documented in a generated file
+     (`configuration-options.md`, the CRD YAMLs), the fix is the Go struct comment plus
+     `make generate`, not a hand edit. Say so rather than drafting text for the generated file.
 3. **Internal consistency.** When the new content describes two or more parallel things of the same
    kind (two credentials, two connection types, two failure modes), does it treat them
    symmetrically? One getting a security/configuration paragraph while its sibling gets none is a

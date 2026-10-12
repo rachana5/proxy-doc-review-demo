@@ -1,0 +1,11 @@
+{
+  "docs_changed": [
+    "docs/content/reference/install-configuration/providers/kubernetes/kubernetes-ingress-nginx.md",
+    "docs/content/reference/routing-configuration/kubernetes/ingress-nginx.md"
+  ],
+  "user_facing_code": [],
+  "generated_touched": [],
+  "run_content_review": true,
+  "run_missing_docs": false,
+  "action": "full-review"
+}

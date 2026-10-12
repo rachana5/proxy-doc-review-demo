@@ -36,6 +36,21 @@
   ],
   "user_facing_code": [
     {
+      "area": "Router rule matchers and priority",
+      "pattern": "^pkg/muxer/(http|tcp)/.*\\.go$|^pkg/muxer/muxer\\.go$|^pkg/rules/.*\\.go$",
+      "docs": [
+        "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+        "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md"
+      ]
+    },
+    {
+      "area": "ACME and certificate resolvers",
+      "pattern": "^pkg/provider/acme/.*\\.go$",
+      "docs": [
+        "docs/content/reference/install-configuration/tls/certificate-resolvers/"
+      ]
+    },
+    {
       "area": "Entry point",
       "pattern": "^pkg/config/static/entrypoints\\.go$",
       "docs": [
@@ -92,5 +107,9 @@
     "inflightreq": "inflightreq",
     "ipwhitelist": "ipallowlist",
     "auth": "basicauth"
-  }
+  },
+  "drop_outside_diff_layers": [
+    "reference"
+  ],
+  "engine_link_mode": "mkdocs"
 }

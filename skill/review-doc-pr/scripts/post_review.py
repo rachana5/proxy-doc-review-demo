@@ -73,6 +73,27 @@ def cap_severity_outside_diff(
     return capped
 
 
+def drop_outside_diff(
+    findings: list[dict], changed_ranges: dict[str, list[list[int]]], layers: list[str],
+) -> list[dict]:
+    """Remove findings from `layers` whose line is outside the PR's changed
+    lines (a finding merged from several layers is kept if any layer is not
+    droppable). Used by profiles whose reference layer scans whole files: an
+    old dead link the PR did not touch is not this PR's problem, and listing
+    it makes the comment noisy."""
+    if not layers:
+        return findings
+    kept = []
+    for f in findings:
+        fl = f.get("layers", [f["layer"]])
+        ranges = [tuple(r) for r in changed_ranges.get(f["file"], [])]
+        outside = not changed_lines.line_in_ranges(f["line"], ranges)
+        if outside and all(l in layers for l in fl):
+            continue
+        kept.append(f)
+    return kept
+
+
 def render_comment(findings: list[dict], template_text: str, marker: str = MARKER) -> str:
     """The zero-findings special case the mustache-ish template can't
     express on its own (see module docstring); anything non-empty just
@@ -123,6 +144,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--changed-lines", required=True, help="path to scripts.changed_lines's output JSON")
     parser.add_argument("--template", required=True, help="path to templates/pr-comment.md.tmpl")
     parser.add_argument("--marker", default=MARKER)
+    parser.add_argument("--profile", help="product profile; its drop_outside_diff_layers removes out-of-diff findings of those layers")
+    parser.add_argument("--classify", help="classify.json from scripts.missing_docs; decides whether any comment is posted at all")
     parser.add_argument(
         "--dry-run", action="store_true",
         help="print what would be posted instead of calling gh — no marker check either, "
@@ -130,9 +153,19 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    action = json.loads(Path(args.classify).read_text())["action"] if args.classify else None
     findings = json.loads(Path(args.findings).read_text())
     changed_ranges = json.loads(Path(args.changed_lines).read_text())
+    if args.profile:
+        from scripts import profile as profile_mod
+        findings = drop_outside_diff(
+            findings, changed_ranges, profile_mod.load(args.profile).get("drop_outside_diff_layers", []))
     findings = cap_severity_outside_diff(findings, changed_ranges)
+
+    # Silence rules: nothing to review, or a code-only PR with no docs gap found.
+    if action == "silent" or (action == "missing-docs-only" and not findings):
+        print(f"[post_review] action={action} with {len(findings)} finding(s): no comment posted.")
+        return 0
     template_text = Path(args.template).read_text()
     body = render_comment(findings, template_text, args.marker)
 

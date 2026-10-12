@@ -23,6 +23,30 @@ Two seeded PRs, run against the real `traefik/traefik` Retry middleware. The ren
 
 These two runs were produced by Claude Code following `skill/review-doc-pr/SKILL.md` locally in dry-run mode (the agent layers are LLM judgment; the classifier, link checker, aggregation and rendering are scripts). They were not run in CI.
 
+## Replay on real merged PRs
+
+Six real `traefik/traefik` PRs were replayed locally (branches rebuilt from each PR's base, the PR applied, one reviewer agent per PR, dry run). Rendered comments are in `examples/replay/pr-<number>/comment.md`.
+
+| PR | What it is | Result |
+|---|---|---|
+| 13955 | Maintainer docs clarification | 1 low-confidence suggestion |
+| 13925 | External contributor, dead-anchor fix | 1 weak suggestion (a confirmation, not a problem; a rule now forbids that) |
+| 13873 | External feature with docs | 2 suggestions |
+| 13882 | Feature with docs (double wildcard matchers) | 4 suggestions, no blocking |
+| 13882 with docs removed | Tests the missing-docs check | 4 findings, 3 of the 4 pages the real PR updated; missed the migration note |
+| 13939 | External code-only bug fix | Silent, as intended |
+
+What the replay found and fixed in this demo:
+
+- The code-to-doc map missed router rule matchers and ACME. Both are now in `profiles/proxy.json`.
+- The link checker gave 27 false "broken link" results across the Proxy docs, because MkDocs directory-style URLs are not file paths. It now has a MkDocs mode (`--engine mkdocs`) that resolves them like the built site, resolves `include-markdown` banners, and validates `#anchors`. On the pre-fix pages of PR 13925 it reports exactly the 4 dead anchors that PR fixed. On all 169 current Proxy docs pages it reports 11 findings, which are real dead anchors (a heading like `users & usersFile` slugs to `users-usersfile`, but the link has a double hyphen).
+- Dead links on lines a PR did not change are no longer listed (`drop_outside_diff_layers` in the profile).
+- Collapsed headlines use only the first sentence of the reasoning; the full text is in the body.
+- Zero-finding code-only PRs post nothing, handled by `--classify`, not by hand.
+- The style checklist no longer contradicts the style guide on Title Case headings; the completeness, accuracy, and reference checklists no longer carry Hub-specific paths.
+
+Known weak spots: the agent layers still produce occasional low-confidence nits (0.35 to 0.5), and nothing here has a measured false-positive rate. Anchor slugs assume the default MkDocs `toc` extension, which is what `docs/mkdocs.yml` configures.
+
 ## What changed from the Hub skill
 
 This is a copy of the Hub per-PR review skill with a product **profile** added, so the review layers stay product-neutral.
@@ -37,7 +61,7 @@ This is a copy of the Hub per-PR review skill with a product **profile** added, 
 
 ```bash
 cd skill/review-doc-pr
-PYTHONPATH=. python3 -m pytest scripts/tests -q          # 178 tests
+PYTHONPATH=. python3 -m pytest scripts/tests -q          # 189 tests
 
 # Classify a PR's files against the Proxy profile
 git diff --name-only origin/master...<branch> | PYTHONPATH=. python3 -m scripts.missing_docs --profile proxy
