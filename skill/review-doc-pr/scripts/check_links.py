@@ -283,13 +283,9 @@ def check_internal_link_mkdocs(link_target: str, source_file: Path, repo_root: P
         target = _mkdocs_target_file(path_part, source_file, docs_root)
         if target is None:
             # An existing directory with no index page still means the link is wrong in MkDocs.
-            try:
-                shown = (source_file.parent / path_part).resolve().relative_to(repo_root.resolve())
-            except ValueError:
-                shown = path_part
             return make_finding(
                 layer="reference", file=str(source_file), line=0, quote=link_target,
-                reasoning=f"Link target does not resolve to a page in the built site: {path_part} (looked near {shown})",
+                reasoning=f"Link does not resolve to a page in the built site: {path_part}",
                 suggested_fix="(needs a human to identify the correct target)",
                 severity="blocking", confidence=0.9, auto_fixable=_NO_SAFE_AUTOFIX,
             )

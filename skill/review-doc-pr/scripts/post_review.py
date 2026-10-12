@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import tempfile
 from pathlib import Path
 
@@ -94,6 +95,70 @@ def drop_outside_diff(
     return kept
 
 
+COMMENT_SIZE_CAP = 60_000  # GitHub's hard limit is 65,536 characters per comment
+_FIX_CAP_ON_SHRINK = 500
+
+_SEVERITY_MARK = {"blocking": "\U0001F534", "suggestion": "\U0001F7E1"}
+
+
+def _sentences(text: str) -> tuple[str, str]:
+    """(first sentence, the rest) of a whitespace-normalized text."""
+    text = " ".join(str(text).split())
+    m = re.match(r"(.+?[.!?])(?:\s+(.*))?$", text)
+    return (m.group(1), m.group(2) or "") if m else (text, "")
+
+
+def _html_inline(text: str) -> str:
+    """Markdown is not rendered inside <summary>, so turn `code` into <code>."""
+    text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return re.sub(r"`([^`]+)`", r"<code>\1</code>", text)
+
+
+def _short_path(path: str) -> str:
+    return "/".join(path.split("/")[-2:])
+
+
+def _is_simple_edit(f: dict) -> bool:
+    quote, fix = f["quote"], f["suggested_fix"]
+    return (
+        f["layer"] != "completeness"
+        and "\n" not in quote and "\n" not in fix
+        and not fix.startswith("(") and len(quote) < 400 and len(fix) < 400
+    )
+
+
+def render_finding(f: dict, fix_cap: int | None = None) -> str:
+    headline, rest = _sentences(f.get("reasoning", ""))
+    if len(headline) > 140:
+        headline = headline[:139].rstrip() + "…"
+    mark = _SEVERITY_MARK.get(f["severity"], "")
+    summary = f'{mark} <code>{_short_path(f["file"])}:{f["line"]}</code> &nbsp;{_html_inline(headline)}'
+    quote, fix = f["quote"].strip(), f["suggested_fix"].strip()
+    if fix_cap is not None and len(fix) > fix_cap:
+        fix = fix[:fix_cap].rstrip() + "\n\n_(shortened to fit the comment size limit)_"
+    parts = [f"<details>\n<summary>{summary}</summary>\n"]
+    if rest:
+        parts.append(f"<sub><i>{_html_inline(rest)}</i></sub>\n")
+    if _is_simple_edit(f):
+        parts.append(f"```diff\n- {quote}\n+ {fix}\n```\n")
+    else:
+        parts.append("\n".join("> " + line for line in quote.splitlines()) + "\n")
+        parts.append(f"{fix}\n")
+    parts.append("</details>\n")
+    return "\n".join(parts)
+
+
+def render_findings_block(findings: list[dict]) -> str:
+    """Blocking first, then suggestions; within each, by file and line. If the
+    result would exceed the size cap, shorten the longest suggested fixes."""
+    ordered = sorted(findings, key=lambda f: (f["severity"] != "blocking", f["file"], f["line"]))
+    block = "\n".join(render_finding(f) for f in ordered)
+    if len(block) > COMMENT_SIZE_CAP:
+        block = "\n".join(render_finding(f, fix_cap=_FIX_CAP_ON_SHRINK) for f in ordered)
+        block += "\n_Some suggested text was shortened to fit the comment size limit._\n"
+    return block
+
+
 def render_comment(findings: list[dict], template_text: str, marker: str = MARKER) -> str:
     """The zero-findings special case the mustache-ish template can't
     express on its own (see module docstring); anything non-empty just
@@ -106,7 +171,17 @@ def render_comment(findings: list[dict], template_text: str, marker: str = MARKE
     bump the sentinel would change what has_existing_comment searches for
     without changing what actually gets posted -- the idempotency check
     and the posted body silently disagreeing on the marker."""
-    body = _EMPTY_BODY if not findings else aggregate.render_report(findings, template_text)
+    if not findings:
+        body = _EMPTY_BODY
+    elif "{{findings_block}}" in template_text:
+        # Header/footer come from the template; the findings are laid out in
+        # Python (conditional layout the mustache-ish renderer can't express).
+        # Fill the block last so finding text is never scanned for placeholders.
+        body = aggregate.render_report(findings, template_text)
+        body = body.replace("{{findings_block}}", render_findings_block(findings))
+    else:
+        body = aggregate.render_report(findings, template_text)
+    body = re.sub(r"\b1 suggestions\b", "1 suggestion", body)
     if marker != MARKER:
         body = body.replace(MARKER, marker)
     return body

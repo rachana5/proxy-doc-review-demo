@@ -248,3 +248,50 @@ def test_classify_silent_posts_nothing(tmp_path, capsys):
                   "--changed-lines", str(tmp_path / "c.json"), "--template", str(tmpl),
                   "--classify", str(tmp_path / "k.json"), "--dry-run"])
     assert rc == 0 and "no comment posted" in capsys.readouterr().out
+
+
+# --- new comment layout ----------------------------------------------------
+def _f(layer, sev, line, quote="old text", fix="new text", reasoning="Rule one. Extra evidence."):
+    return {"layer": layer, "file": "docs/content/a/b/page.md", "line": line, "quote": quote,
+            "reasoning": reasoning, "suggested_fix": fix, "severity": sev,
+            "confidence": 0.7, "auto_fixable": False}
+
+
+def test_blocking_findings_come_first_then_by_line():
+    from scripts import post_review as pr
+    block = pr.render_findings_block([_f("style", "suggestion", 3), _f("accuracy", "blocking", 90), _f("style", "suggestion", 1)])
+    assert block.index(":90") < block.index(":1<") < block.index(":3<")
+
+
+def test_simple_edit_renders_as_diff_and_has_no_headings_or_tables():
+    from scripts import post_review as pr
+    out = pr.render_findings_block([_f("style", "suggestion", 7)])
+    assert "```diff\n- old text\n+ new text\n```" in out
+    assert "\n#" not in out and "|---" not in out
+
+
+def test_summary_uses_html_code_not_markdown_backticks():
+    from scripts import post_review as pr
+    out = pr.render_finding(_f("style", "suggestion", 7, reasoning="Use `uses` not leverages."))
+    summary = out.split("<summary>")[1].split("</summary>")[0]
+    assert "`" not in summary and "<code>uses</code>" in summary
+
+
+def test_multiline_fix_is_not_forced_into_a_diff():
+    from scripts import post_review as pr
+    out = pr.render_finding(_f("completeness", "suggestion", 1, quote="pkg/x.go: new option", fix="Add:\n\n```markdown\n| a |\n```"))
+    assert "```diff" not in out and "> pkg/x.go: new option" in out and "```markdown" in out
+
+
+def test_oversized_comment_shortens_fixes_and_says_so():
+    from scripts import post_review as pr
+    big = [_f("completeness", "suggestion", i, fix="x" * 3000) for i in range(30)]
+    out = pr.render_findings_block(big)
+    assert len(out) < pr.COMMENT_SIZE_CAP + 2000 and "shortened" in out
+
+
+def test_singular_suggestion_count():
+    from scripts import post_review as pr
+    tmpl = "## Docs review: {{blocking_count}} blocking, {{suggestion_count}} suggestions\n\n{{findings_block}}\n"
+    out = pr.render_comment([_f("style", "suggestion", 1)], tmpl)
+    assert "1 suggestion\n" in out.split("\n\n")[0] + "\n" and "1 suggestions" not in out

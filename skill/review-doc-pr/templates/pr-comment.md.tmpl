@@ -1,21 +1,6 @@
 ## Docs review: {{blocking_count}} blocking, {{suggestion_count}} suggestions
 
-Automated review of this PR against the style guide and, where the PR changes behavior, the code. Nothing here blocks merge. Apply what is relevant, then this PR goes through its normal review.
-
-{{#findings}}
-<details>
-<summary><code>{{file}}:{{line}}</code> [{{layers}}] ({{severity}}) {{headline}}</summary>
-
-{{reasoning}}
-
-> {{quote}}
-
-**Suggested fix:**
-{{suggested_fix}}
-
-</details>
-
-{{/findings}}
+{{findings_block}}
 <!-- review-doc-pr:v1 -->
 
-<sub>Suggestions are drafts. Verify each against the code before applying. Style findings come from an AI reading the style guide; no linter ran. This check is advisory and never edits the PR. To read a finding in a separate session, fetch this comment's raw body with `gh api repos/<owner>/<repo>/issues/comments/<id>`.</sub>
+<sub>Suggestions are drafts: verify each against the code before applying. Advisory only; this never edits the PR or blocks merge. Style findings are AI-judged against the style guide (no linter ran).</sub>

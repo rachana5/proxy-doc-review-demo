@@ -5,7 +5,7 @@
     "line": 7,
     "quote": "it covers this",
     "reasoning": "\"it\" and \"this\" have no noun in the same sentence. A reader scanning the page cannot tell what the guide covers.",
-    "suggested_fix": "Name the topic, for example: \"The timeouts guide explains how `timeout` limits total retry time.\"",
+    "suggested_fix": "The timeouts guide explains how `timeout` limits total retry time.",
     "severity": "suggestion",
     "confidence": 0.6,
     "auto_fixable": false

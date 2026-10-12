@@ -1,14 +1,12 @@
-## Docs review: 0 blocking, 1 suggestions
-
-Automated review of this PR against the code and the style guide. Nothing here blocks merge. Apply what is relevant, then this PR goes through its normal review.
-
+## Docs review: 0 blocking, 1 suggestion
 
 <details>
-<summary><code>docs/content/reference/routing-configuration/http/middlewares/retry.md:95</code> [completeness] (suggestion) This PR adds a user-configurable `maxBackoff` option to the Retry middleware but changes no documentation. The Retry options table (Configuration Options) and the examples in all five formats do not mention it.</summary>
+<summary>🟡 <code>middlewares/retry.md:95</code> &nbsp;This PR adds a user-configurable <code>maxBackoff</code> option to the Retry middleware but changes no documentation.</summary>
+
+<sub><i>The Retry options table (Configuration Options) and the examples in all five formats do not mention it.</i></sub>
 
 > pkg/config/dynamic/middlewares.go: new Retry option "maxBackoff" (ptypes.Duration)
 
-**Suggested fix:**
 Add a row to the Configuration Options table, after `initialInterval`:
 
 ```markdown
@@ -21,8 +19,7 @@ Before applying: this diff only adds the struct field. `pkg/middlewares/retry/re
 
 </details>
 
-
 <!-- review-doc-pr:v1 -->
 
-<sub>Suggestions are drafts. Verify each against the code before applying. Style findings come from an AI reading the style guide; no linter ran. This check is advisory and never edits the PR. To read a finding in a separate session, fetch this comment's raw body with `gh api repos/<owner>/<repo>/issues/comments/<id>`.</sub>
+<sub>Suggestions are drafts: verify each against the code before applying. Advisory only; this never edits the PR or blocks merge. Style findings are AI-judged against the style guide (no linter ran).</sub>
 
