@@ -222,7 +222,7 @@ def test_main_applies_severity_cap_before_rendering(tmp_path, capsys):
         "--dry-run",
     ])
     assert exit_code == 0
-    assert "0 blocking, 1 suggestions" in capsys.readouterr().out
+    assert "0 blocking, 1 suggestion" in capsys.readouterr().out
 
 
 def test_drop_outside_diff_removes_only_listed_layers_outside_the_diff():
