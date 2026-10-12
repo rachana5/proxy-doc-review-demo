@@ -1,7 +1,7 @@
 ## Docs review: 2 blocking, 4 suggestions
 
 <details>
-<summary>🔴 <code>middlewares/retry.md:7</code> &nbsp;·&nbsp; Broken link</summary>
+<summary>🔴 <code>http/middlewares/retry.md:7</code> &nbsp;·&nbsp; Broken link</summary>
 
 **What's wrong:** Link does not resolve to a page in the built site: ../../../routing/not-a-real-page.md
 
@@ -14,7 +14,7 @@
 </details>
 
 <details>
-<summary>🔴 <code>middlewares/retry.md:101</code> &nbsp;·&nbsp; Accuracy: default value</summary>
+<summary>🔴 <code>http/middlewares/retry.md:101</code> &nbsp;·&nbsp; Accuracy: default value</summary>
 
 **What's wrong:** The default is 2 MB, not 1 MB. `RetryDefaultMaxRequestBodyBytes` is `2 * 1024 * 1024` (pkg/config/dynamic/middlewares.go:17) and pkg/middlewares/retry/retry.go:109 uses it when the option is unset.
 
@@ -28,7 +28,7 @@
 </details>
 
 <details>
-<summary>🟡 <code>middlewares/retry.md:7</code> &nbsp;·&nbsp; Style guide: Words and Phrases to Avoid</summary>
+<summary>🟡 <code>http/middlewares/retry.md:7</code> &nbsp;·&nbsp; Style guide: Words and Phrases to Avoid</summary>
 
 **What's wrong:** "leverages" is a word the guide replaces with "uses", and "robust, seamless" describes nothing specific.
 
@@ -42,7 +42,7 @@
 </details>
 
 <details>
-<summary>🟡 <code>middlewares/retry.md:7</code> &nbsp;·&nbsp; Style guide: Words and Phrases to Avoid</summary>
+<summary>🟡 <code>http/middlewares/retry.md:7</code> &nbsp;·&nbsp; Style guide: Words and Phrases to Avoid</summary>
 
 **What's wrong:** A rhetorical question. The guide asks for a statement of the fact instead.
 
@@ -56,7 +56,7 @@
 </details>
 
 <details>
-<summary>🟡 <code>middlewares/retry.md:7</code> &nbsp;·&nbsp; Style guide: Voice</summary>
+<summary>🟡 <code>http/middlewares/retry.md:7</code> &nbsp;·&nbsp; Style guide: Voice</summary>
 
 **What's wrong:** The sentence starts with "Please" and joins two clauses with an em dash.
 
@@ -70,7 +70,7 @@
 </details>
 
 <details>
-<summary>🟡 <code>middlewares/retry.md:7</code> &nbsp;·&nbsp; Style guide: Clarity Rules</summary>
+<summary>🟡 <code>http/middlewares/retry.md:7</code> &nbsp;·&nbsp; Style guide: Clarity Rules</summary>
 
 **What's wrong:** "it" and "this" have no noun in the same sentence. A reader scanning the page cannot tell what the guide covers.
 

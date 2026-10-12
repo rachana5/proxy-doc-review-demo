@@ -1,7 +1,7 @@
 ## Docs review: 0 blocking, 4 suggestions
 
 <details>
-<summary>🟡 <code>migrate/v3.md:47</code> &nbsp;·&nbsp; Style guide: Voice</summary>
+<summary>🟡 <code>content/migrate/v3.md:47</code> &nbsp;·&nbsp; Style guide: Voice</summary>
 
 **What's wrong:** Do not state how a third-party service behaves unless its documentation or the source says so. The Go comment (pkg/provider/acme/provider.go:1063) states it, but the migration text gives the reader no link; acme.md already links Let's Encrypt for the related wildcard limit.
 
@@ -15,7 +15,7 @@
 </details>
 
 <details>
-<summary>🟡 <code>routing/rules-and-priority.md:57</code> &nbsp;·&nbsp; Missing docs: Host wildcard validation</summary>
+<summary>🟡 <code>http/routing/rules-and-priority.md:57</code> &nbsp;·&nbsp; Missing docs: Host wildcard validation</summary>
 
 **What's wrong:** pkg/muxer/http/matcher.go:88-90 now makes the Host matcher return an error for any wildcard that is not the catch-all `*` or a `*.`/`**.` prefix (for example `Host(`foo.*.com`)` or `Host(`*foo.com`)`). That is a user-visible change in what a router rule accepts, and the page does not say where a wildcard may appear. Confirm whether such rules were previously accepted before documenting.
 
@@ -28,7 +28,7 @@ Add after the wildcard description: "A wildcard is valid only as a leading `*.` 
 </details>
 
 <details>
-<summary>🟡 <code>routing/rules-and-priority.md:241</code> &nbsp;·&nbsp; Style guide: Clarity Rules</summary>
+<summary>🟡 <code>http/routing/rules-and-priority.md:241</code> &nbsp;·&nbsp; Style guide: Clarity Rules</summary>
 
 **What's wrong:** Name the concrete noun instead of 'it'. In this sentence 'it' could refer to 'The stars', 'this length', or the host; only the host is meant.
 
@@ -43,7 +43,7 @@ so that the double wildcard host always ranks below the single wildcard and the 
 </details>
 
 <details>
-<summary>🟡 <code>routing/rules-and-priority.md:219</code> &nbsp;·&nbsp; Style guide: Clarity Rules</summary>
+<summary>🟡 <code>tcp/routing/rules-and-priority.md:219</code> &nbsp;·&nbsp; Style guide: Clarity Rules</summary>
 
 **What's wrong:** Name the concrete noun instead of 'it'. In this sentence 'it' could refer to 'The stars', 'this length', or the host; only the host is meant.
 

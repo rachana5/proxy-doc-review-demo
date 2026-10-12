@@ -1,7 +1,7 @@
 ## Docs review: 0 blocking, 1 suggestion
 
 <details>
-<summary>🟡 <code>middlewares/retry.md:95</code> &nbsp;·&nbsp; Missing docs: new <code>maxBackoff</code> option</summary>
+<summary>🟡 <code>http/middlewares/retry.md:95</code> &nbsp;·&nbsp; Missing docs: new <code>maxBackoff</code> option</summary>
 
 **What's wrong:** This PR adds a user-configurable `maxBackoff` option to the Retry middleware but changes no documentation. The Retry options table (Configuration Options) and the examples in all five formats do not mention it.
 

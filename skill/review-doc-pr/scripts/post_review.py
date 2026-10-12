@@ -115,7 +115,7 @@ def _html_inline(text: str) -> str:
 
 
 def _short_path(path: str) -> str:
-    return "/".join(path.split("/")[-2:])
+    return "/".join(path.split("/")[-3:])
 
 
 def _is_simple_edit(f: dict) -> bool:
