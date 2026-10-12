@@ -1,0 +1,34 @@
+# UNTESTED TEMPLATE. Copy to .github/workflows/ in YOUR FORK of traefik/traefik only.
+# Not for upstream: upstream needs maintainer agreement and a fork-PR security design
+# (see docs/proxy-doc-review-design.md, open items 1 and 2).
+#
+# Setup in the fork: add the repository secret ANTHROPIC_API_KEY, copy skill/review-doc-pr
+# to .claude/skills/review-doc-pr, and (optional) copy the style guide to
+# docs/content/contributing/documentation-style-guide.md.
+name: Docs review (demo)
+on:
+  pull_request:
+    types: [opened, ready_for_review]   # fires once per PR; the comment marker blocks duplicates
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            /review-doc-pr ${{ github.event.pull_request.number }} --profile proxy
+          claude_args: |
+            --allowedTools "Read,Grep,Glob,Bash(python3:*),Bash(git:*),Bash(gh:*)"
+        env:
+          GH_TOKEN: ${{ github.token }}

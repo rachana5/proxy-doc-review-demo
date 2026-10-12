@@ -1,0 +1,13 @@
+[
+  {
+    "layer": "accuracy",
+    "file": "docs/content/reference/routing-configuration/http/middlewares/retry.md",
+    "line": 101,
+    "quote": "| 1MB | No |",
+    "reasoning": "The default is 2 MB, not 1 MB. `RetryDefaultMaxRequestBodyBytes` is `2 * 1024 * 1024` (pkg/config/dynamic/middlewares.go:17) and pkg/middlewares/retry/retry.go:109 uses it when the option is unset.",
+    "suggested_fix": "Change the Default cell to `2MB`.",
+    "severity": "blocking",
+    "confidence": 0.95,
+    "auto_fixable": false
+  }
+]

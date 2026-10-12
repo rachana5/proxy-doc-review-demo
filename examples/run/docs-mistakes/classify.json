@@ -1,0 +1,10 @@
+{
+  "docs_changed": [
+    "docs/content/reference/routing-configuration/http/middlewares/retry.md"
+  ],
+  "user_facing_code": [],
+  "generated_touched": [],
+  "run_content_review": true,
+  "run_missing_docs": false,
+  "action": "full-review"
+}

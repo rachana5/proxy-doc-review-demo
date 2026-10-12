@@ -1,0 +1,35 @@
+[
+  {
+    "layer": "style",
+    "file": "docs/content/reference/routing-configuration/http/middlewares/retry.md",
+    "line": 7,
+    "quote": "It leverages exponential backoff to provide a robust, seamless retry experience.",
+    "reasoning": "Style guide, Words and Phrases to Avoid: replace \"leverages\" with \"uses\", and replace \"robust, seamless\" with the specific fact.",
+    "suggested_fix": "The middleware waits longer between each retry when you set `initialInterval`, so a failing backend gets time to recover.",
+    "severity": "suggestion",
+    "confidence": 0.85,
+    "auto_fixable": false
+  },
+  {
+    "layer": "style",
+    "file": "docs/content/reference/routing-configuration/http/middlewares/retry.md",
+    "line": 7,
+    "quote": "But what if you need more control?",
+    "reasoning": "Style guide, Words and Phrases to Avoid: rhetorical questions. Write a statement.",
+    "suggested_fix": "To control how long retries continue, set `timeout`.",
+    "severity": "suggestion",
+    "confidence": 0.85,
+    "auto_fixable": false
+  },
+  {
+    "layer": "style",
+    "file": "docs/content/reference/routing-configuration/http/middlewares/retry.md",
+    "line": 7,
+    "quote": "Please see the [timeouts guide](../../../routing/not-a-real-page.md) \u2014 it covers this.",
+    "reasoning": "Style guide, Voice: omit \"please\". Style guide, Words and Phrases to Avoid: em dash used as a connector.",
+    "suggested_fix": "See the [timeouts guide](../../../routing/not-a-real-page.md). It covers the retry `timeout` option.",
+    "severity": "suggestion",
+    "confidence": 0.8,
+    "auto_fixable": false
+  }
+]

@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#444"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="1000" fill="#ffffff"/>
+
+  <text x="500" y="38" text-anchor="middle" font-size="22" font-weight="bold" fill="#111">Proposed CI Review Flow for Traefik Proxy Pull Requests</text>
+
+  <!-- Start -->
+  <rect x="300" y="64" width="400" height="56" rx="10" fill="#e8f0fe" stroke="#3b6fd4" stroke-width="2"/>
+  <text x="500" y="89" text-anchor="middle" font-size="15" font-weight="bold" fill="#111">Pull request opened or marked ready</text>
+  <text x="500" y="109" text-anchor="middle" font-size="13" fill="#333">traefik/traefik</text>
+  <line x1="500" y1="120" x2="500" y2="150" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Gate -->
+  <rect x="250" y="152" width="500" height="64" rx="10" fill="#fff4e0" stroke="#d18a1c" stroke-width="2"/>
+  <text x="500" y="177" text-anchor="middle" font-size="15" font-weight="bold" fill="#111">Gate</text>
+  <text x="500" y="198" text-anchor="middle" font-size="13" fill="#333">Skip dependency bumps. Fork PRs run only after a maintainer applies a label.</text>
+  <line x1="500" y1="216" x2="500" y2="246" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Classify -->
+  <rect x="300" y="248" width="400" height="56" rx="10" fill="#f1f3f4" stroke="#666" stroke-width="2"/>
+  <text x="500" y="273" text-anchor="middle" font-size="15" font-weight="bold" fill="#111">Classify the changed files</text>
+  <text x="500" y="293" text-anchor="middle" font-size="13" fill="#333">Docs? User-facing code? Neither?</text>
+
+  <path d="M400,304 L400,326 L170,326 L170,360" fill="none" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="500" y1="304" x2="500" y2="360" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M600,304 L600,326 L830,326 L830,360" fill="none" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Branch labels -->
+  <rect x="40" y="362" width="260" height="62" rx="10" fill="#e6f4ea" stroke="#2f8f4e" stroke-width="2"/>
+  <text x="170" y="387" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Doc files changed</text>
+  <text x="170" y="407" text-anchor="middle" font-size="12" fill="#333">with or without code changes</text>
+
+  <rect x="370" y="362" width="260" height="62" rx="10" fill="#e6f4ea" stroke="#2f8f4e" stroke-width="2"/>
+  <text x="500" y="387" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">User-facing code changed</text>
+  <text x="500" y="407" text-anchor="middle" font-size="12" fill="#333">no doc files changed</text>
+
+  <rect x="700" y="362" width="260" height="62" rx="10" fill="#f1f3f4" stroke="#666" stroke-width="2"/>
+  <text x="830" y="387" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Neither</text>
+  <text x="830" y="407" text-anchor="middle" font-size="12" fill="#333">tests, refactors, internal code</text>
+
+  <line x1="170" y1="424" x2="170" y2="456" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="500" y1="424" x2="500" y2="456" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="830" y1="424" x2="830" y2="456" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Review layers -->
+  <rect x="40" y="458" width="260" height="130" rx="10" fill="#e8f0fe" stroke="#3b6fd4" stroke-width="2"/>
+  <text x="170" y="483" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Review the changed docs</text>
+  <text x="170" y="506" text-anchor="middle" font-size="12" fill="#333">Accuracy against the PR code</text>
+  <text x="170" y="524" text-anchor="middle" font-size="12" fill="#333">Style against the style guide</text>
+  <text x="170" y="542" text-anchor="middle" font-size="12" fill="#333">References and links</text>
+  <text x="170" y="560" text-anchor="middle" font-size="12" fill="#333">Clarity</text>
+  <text x="170" y="578" text-anchor="middle" font-size="12" fill="#333">Completeness</text>
+
+  <!-- Reverse check -->
+  <rect x="370" y="458" width="260" height="130" rx="10" fill="#e8f0fe" stroke="#3b6fd4" stroke-width="2"/>
+  <text x="500" y="483" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Reverse check</text>
+  <text x="500" y="506" text-anchor="middle" font-size="12" fill="#333">Do these code changes need docs?</text>
+  <text x="500" y="526" text-anchor="middle" font-size="12" fill="#333">New or changed option, flag,</text>
+  <text x="500" y="544" text-anchor="middle" font-size="12" fill="#333">default, or middleware behavior</text>
+  <text x="500" y="568" text-anchor="middle" font-size="12" fill="#333">Uses the shared classify and locate logic</text>
+
+  <!-- Stop (neither) -->
+  <rect x="700" y="458" width="260" height="130" rx="10" fill="#f1f3f4" stroke="#666" stroke-width="2"/>
+  <text x="830" y="518" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Stop</text>
+  <text x="830" y="540" text-anchor="middle" font-size="12" fill="#333">No review, no comment</text>
+
+  <!-- dashed: docs branch also runs reverse check -->
+  <line x1="300" y1="523" x2="370" y2="523" stroke="#444" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow)"/>
+  <text x="335" y="512" text-anchor="middle" font-size="10" fill="#444">if code</text>
+  <text x="335" y="545" text-anchor="middle" font-size="10" fill="#444">changed too</text>
+
+  <!-- Docs required? -->
+  <line x1="500" y1="588" x2="500" y2="618" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="370" y="620" width="260" height="50" rx="10" fill="#fff4e0" stroke="#d18a1c" stroke-width="2"/>
+  <text x="500" y="651" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Docs required?</text>
+
+  <!-- No path -->
+  <line x1="630" y1="645" x2="700" y2="645" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="665" y="636" text-anchor="middle" font-size="11" fill="#444">No</text>
+  <rect x="702" y="622" width="258" height="46" rx="10" fill="#f1f3f4" stroke="#666" stroke-width="2"/>
+  <text x="831" y="650" text-anchor="middle" font-size="12" fill="#333">Stop, no comment</text>
+
+  <!-- Yes path -->
+  <line x1="500" y1="670" x2="500" y2="702" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="514" y="690" font-size="11" fill="#444">Yes</text>
+
+  <!-- Draft suggestions -->
+  <rect x="340" y="704" width="320" height="80" rx="10" fill="#e8f0fe" stroke="#3b6fd4" stroke-width="2"/>
+  <text x="500" y="729" text-anchor="middle" font-size="14" font-weight="bold" fill="#111">Draft doc suggestions</text>
+  <text x="500" y="751" text-anchor="middle" font-size="12" fill="#333">Target file and insertion point</text>
+  <text x="500" y="769" text-anchor="middle" font-size="12" fill="#333">Suggested text, grounded in the code</text>
+
+  <line x1="500" y1="784" x2="500" y2="826" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Review findings join the comment -->
+  <path d="M170,588 L170,858 L250,858" fill="none" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Comment -->
+  <rect x="250" y="828" width="500" height="64" rx="10" fill="#e6f4ea" stroke="#2f8f4e" stroke-width="2"/>
+  <text x="500" y="854" text-anchor="middle" font-size="15" font-weight="bold" fill="#111">One advisory comment on the PR</text>
+  <text x="500" y="876" text-anchor="middle" font-size="12" fill="#333">Findings and suggestions. Posted once. Never edits the PR. Never blocks merge.</text>
+
+  <!-- People -->
+  <path d="M400,892 L400,918 L240,918 L240,940" fill="none" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M600,892 L600,918 L760,918 L760,940" fill="none" stroke="#444" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="50" y="942" width="380" height="42" rx="10" fill="#ffffff" stroke="#666" stroke-width="2"/>
+  <text x="240" y="968" text-anchor="middle" font-size="12" fill="#111">External contributor reviews and applies the suggestions</text>
+  <rect x="570" y="942" width="380" height="42" rx="10" fill="#ffffff" stroke="#666" stroke-width="2"/>
+  <text x="760" y="968" text-anchor="middle" font-size="12" fill="#111">Internal PR: docs owner applies them with the doc generator</text>
+</svg>

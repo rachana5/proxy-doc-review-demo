@@ -1,0 +1,16 @@
+{
+  "docs_changed": [],
+  "user_facing_code": [
+    {
+      "file": "pkg/config/dynamic/middlewares.go",
+      "area": "Routing configuration (middleware, router, service options)",
+      "doc_targets": [
+        "docs/content/reference/routing-configuration/"
+      ]
+    }
+  ],
+  "generated_touched": [],
+  "run_content_review": false,
+  "run_missing_docs": true,
+  "action": "missing-docs-only"
+}
