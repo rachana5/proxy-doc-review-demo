@@ -30,7 +30,7 @@ Six real `traefik/traefik` PRs were replayed locally (branches rebuilt from each
 | PR | What it is | Result |
 |---|---|---|
 | 13955 | Maintainer docs clarification | 1 low-confidence suggestion |
-| 13925 | External contributor, dead-anchor fix | 1 weak suggestion (a confirmation, not a problem; a rule now forbids that) |
+| 13925 | External contributor, dead-anchor fix | No issues found (re-run after the confirmations-are-not-findings rule) |
 | 13873 | External feature with docs | 2 suggestions |
 | 13882 | Feature with docs (double wildcard matchers) | 4 suggestions, no blocking |
 | 13882 with docs removed | Tests the missing-docs check | 4 findings, 3 of the 4 pages the real PR updated; missed the migration note |
