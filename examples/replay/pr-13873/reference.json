@@ -8,7 +8,8 @@
     "suggested_fix": "(needs a human to find the current URL)",
     "severity": "blocking",
     "confidence": 0.9,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Broken link"
   },
   {
     "layer": "reference",
@@ -19,6 +20,7 @@
     "suggested_fix": "(needs a human to find the current URL)",
     "severity": "blocking",
     "confidence": 0.9,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Broken link"
   }
 ]

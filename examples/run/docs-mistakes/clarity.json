@@ -8,6 +8,7 @@
     "suggested_fix": "The timeouts guide explains how `timeout` limits total retry time.",
     "severity": "suggestion",
     "confidence": 0.6,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Style guide: Clarity Rules"
   }
 ]

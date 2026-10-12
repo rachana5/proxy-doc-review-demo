@@ -19,7 +19,9 @@ State in the comment which one was used.
   adds to a page whose other headings use another case. Flag a changed or added heading that is not
   Title Case. Never suggest sentence case, and never flag headings the PR did not change.
 - The "we'll" guide voice is tolerated. Do not flag it.
-- Cite the guide rule in `reasoning` (for example "Style guide, Words and Phrases to Avoid").
+- Put the guide's section name in `rule` (for example `Style guide: Words and Phrases to Avoid`). In
+  `reasoning`, say what is wrong with the changed text; don't repeat the section name.
+  `suggested_fix` is the literal replacement for `quote`.
 - When following a rule would make text less accurate or less clear, accuracy wins; do not flag it.
 - Never treat "how neighboring pages do it" as evidence. The guide says not to copy a pattern
   that contradicts it.

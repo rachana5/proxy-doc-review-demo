@@ -138,7 +138,7 @@ def check_internal_link(link_target: str, source_file: Path, repo_root: Path) ->
         quote=link_target,
         reasoning=f"Relative link target does not exist on disk: {shown}",
         suggested_fix="(needs a human to identify the correct target)",
-        severity="blocking", confidence=0.95, auto_fixable=_NO_SAFE_AUTOFIX,
+        severity="blocking", confidence=0.95, auto_fixable=_NO_SAFE_AUTOFIX, rule="Broken link",
     )
 
 
@@ -287,7 +287,7 @@ def check_internal_link_mkdocs(link_target: str, source_file: Path, repo_root: P
                 layer="reference", file=str(source_file), line=0, quote=link_target,
                 reasoning=f"Link does not resolve to a page in the built site: {path_part}",
                 suggested_fix="(needs a human to identify the correct target)",
-                severity="blocking", confidence=0.9, auto_fixable=_NO_SAFE_AUTOFIX,
+                severity="blocking", confidence=0.9, auto_fixable=_NO_SAFE_AUTOFIX, rule="Broken link",
             )
     else:
         target = source_file.resolve()
@@ -310,7 +310,7 @@ def check_internal_link_mkdocs(link_target: str, source_file: Path, repo_root: P
         layer="reference", file=str(source_file), line=0, quote=link_target,
         reasoning=f"Anchor #{fragment} does not exist in {shown}.{hint}",
         suggested_fix="(needs a human to pick the correct anchor)",
-        severity="blocking", confidence=0.8, auto_fixable=_NO_SAFE_AUTOFIX,
+        severity="blocking", confidence=0.8, auto_fixable=_NO_SAFE_AUTOFIX, rule="Broken anchor",
     )
 
 
@@ -358,7 +358,7 @@ def _broken_link_finding(url: str, status: int) -> dict:
         layer="reference", file="", line=0, quote=url,
         reasoning=f"External URL returned HTTP {status}",
         suggested_fix="(needs a human to find the current URL)",
-        severity="blocking", confidence=0.9, auto_fixable=_NO_SAFE_AUTOFIX,
+        severity="blocking", confidence=0.9, auto_fixable=_NO_SAFE_AUTOFIX, rule="Broken link",
     )
 
 

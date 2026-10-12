@@ -8,6 +8,7 @@
     "suggested_fix": "Add after the wildcard description: \"A wildcard is valid only as a leading `*.` or `**.` label, or as the catch-all `Host(`*`)`. A rule with a wildcard anywhere else is invalid.\"",
     "severity": "suggestion",
     "confidence": 0.45,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Missing docs: Host wildcard validation"
   }
 ]

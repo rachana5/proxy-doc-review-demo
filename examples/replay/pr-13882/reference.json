@@ -8,7 +8,8 @@
     "suggested_fix": "(needs a human to pick the correct anchor)",
     "severity": "blocking",
     "confidence": 0.8,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Broken anchor"
   },
   {
     "layer": "reference",
@@ -19,7 +20,8 @@
     "suggested_fix": "(needs a human to pick the correct anchor)",
     "severity": "blocking",
     "confidence": 0.8,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Broken anchor"
   },
   {
     "layer": "reference",
@@ -30,7 +32,8 @@
     "suggested_fix": "(needs a human to pick the correct anchor)",
     "severity": "blocking",
     "confidence": 0.8,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Broken anchor"
   },
   {
     "layer": "reference",
@@ -41,7 +44,8 @@
     "suggested_fix": "(needs a human to pick the correct anchor)",
     "severity": "blocking",
     "confidence": 0.8,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Broken anchor"
   },
   {
     "layer": "reference",
@@ -52,7 +56,8 @@
     "suggested_fix": "(needs a human to find the current URL)",
     "severity": "blocking",
     "confidence": 0.9,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Broken link"
   },
   {
     "layer": "reference",
@@ -63,6 +68,7 @@
     "suggested_fix": "(needs a human to find the current URL)",
     "severity": "blocking",
     "confidence": 0.9,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Broken link"
   }
 ]

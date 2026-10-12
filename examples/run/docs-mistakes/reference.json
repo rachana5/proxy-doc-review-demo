@@ -1,1 +1,14 @@
-[{"layer": "reference", "file": "docs/content/reference/routing-configuration/http/middlewares/retry.md", "line": 7, "quote": "../../../routing/not-a-real-page.md", "reasoning": "Link does not resolve to a page in the built site: ../../../routing/not-a-real-page.md", "suggested_fix": "(needs a human to identify the correct target)", "severity": "blocking", "confidence": 0.9, "auto_fixable": false}]
+[
+  {
+    "layer": "reference",
+    "file": "docs/content/reference/routing-configuration/http/middlewares/retry.md",
+    "line": 7,
+    "quote": "../../../routing/not-a-real-page.md",
+    "reasoning": "Link does not resolve to a page in the built site: ../../../routing/not-a-real-page.md",
+    "suggested_fix": "(needs a human to identify the correct target)",
+    "severity": "blocking",
+    "confidence": 0.9,
+    "auto_fixable": false,
+    "rule": "Broken link"
+  }
+]

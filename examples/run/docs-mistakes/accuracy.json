@@ -8,6 +8,7 @@
     "suggested_fix": "| 2MB | No |",
     "severity": "blocking",
     "confidence": 0.95,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Accuracy: default value"
   }
 ]

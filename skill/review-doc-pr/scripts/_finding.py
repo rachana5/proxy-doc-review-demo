@@ -12,6 +12,7 @@ from pathlib import Path
 VALID_LAYERS = {"accuracy", "style", "reference", "clarity", "completeness"}
 VALID_SEVERITIES = {"blocking", "suggestion"}
 AUTO_FIX_THRESHOLD = 0.8
+MAX_RULE_LEN = 80  # shown in the collapsed row of the PR comment
 
 REQUIRED_KEYS = {
     "layer", "file", "line", "quote", "reasoning",
@@ -22,7 +23,7 @@ REQUIRED_KEYS = {
 def make_finding(
     *, layer: str, file: str, line: int, quote: str, reasoning: str,
     suggested_fix: str, severity: str, confidence: float,
-    auto_fixable: bool | None = None,
+    auto_fixable: bool | None = None, rule: str | None = None,
 ) -> dict:
     if layer not in VALID_LAYERS:
         raise ValueError(f"unknown layer: {layer!r} (must be one of {VALID_LAYERS})")
@@ -30,11 +31,14 @@ def make_finding(
         raise ValueError(f"unknown severity: {severity!r} (must be one of {VALID_SEVERITIES})")
     if auto_fixable is None:
         auto_fixable = confidence >= AUTO_FIX_THRESHOLD
-    return {
+    finding = {
         "layer": layer, "file": file, "line": line, "quote": quote,
         "reasoning": reasoning, "suggested_fix": suggested_fix,
         "severity": severity, "confidence": confidence, "auto_fixable": auto_fixable,
     }
+    if rule is not None:
+        finding["rule"] = rule
+    return finding
 
 
 def validate_finding(finding: dict) -> list[str]:
@@ -44,6 +48,10 @@ def validate_finding(finding: dict) -> list[str]:
         errors.append(f"missing required key: {key}")
     if "layer" in finding and finding["layer"] not in VALID_LAYERS:
         errors.append(f"invalid layer: {finding['layer']!r}")
+    if "rule" in finding and (
+        not isinstance(finding["rule"], str) or not finding["rule"].strip() or len(finding["rule"]) > MAX_RULE_LEN
+    ):
+        errors.append(f"rule must be a non-empty string of at most {MAX_RULE_LEN} characters")
     if "severity" in finding and finding["severity"] not in VALID_SEVERITIES:
         errors.append(f"invalid severity: {finding['severity']!r}")
     if "confidence" in finding:

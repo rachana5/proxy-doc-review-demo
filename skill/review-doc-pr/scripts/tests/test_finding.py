@@ -156,3 +156,16 @@ def test_main_rejects_json_that_is_not_a_list(tmp_path, capsys):
     exit_code = _finding.main([str(findings_path)])
     assert exit_code == 1
     assert "list" in capsys.readouterr().out
+
+
+def test_rule_is_optional_but_validated_when_present():
+    from scripts import _finding as fd
+    base = fd.make_finding(layer="style", file="a.md", line=1, quote="q", reasoning="r",
+                           suggested_fix="s", severity="suggestion", confidence=0.5, auto_fixable=False)
+    assert fd.validate_finding(base) == []
+    assert fd.validate_finding({**base, "rule": "Style guide: Voice"}) == []
+    assert fd.validate_finding({**base, "rule": ""})
+    assert fd.validate_finding({**base, "rule": "x" * 81})
+    assert fd.make_finding(layer="style", file="a.md", line=1, quote="q", reasoning="r",
+                           suggested_fix="s", severity="suggestion", confidence=0.5,
+                           auto_fixable=False, rule="R")["rule"] == "R"

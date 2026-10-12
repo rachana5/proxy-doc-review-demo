@@ -1,11 +1,13 @@
 ## Docs review: 0 blocking, 1 suggestion
 
 <details>
-<summary>🟡 <code>middlewares/retry.md:95</code> &nbsp;This PR adds a user-configurable <code>maxBackoff</code> option to the Retry middleware but changes no documentation.</summary>
+<summary>🟡 <code>middlewares/retry.md:95</code> &nbsp;·&nbsp; Missing docs: new <code>maxBackoff</code> option</summary>
 
-The Retry options table (Configuration Options) and the examples in all five formats do not mention it.
+**What's wrong:** This PR adds a user-configurable `maxBackoff` option to the Retry middleware but changes no documentation. The Retry options table (Configuration Options) and the examples in all five formats do not mention it.
 
-> pkg/config/dynamic/middlewares.go: new Retry option "maxBackoff" (ptypes.Duration)
+**Code change:** pkg/config/dynamic/middlewares.go: new Retry option "maxBackoff" (ptypes.Duration)
+
+**Suggested fix:**
 
 Add a row to the Configuration Options table, after `initialInterval`:
 

@@ -1,9 +1,11 @@
 ## Docs review: 0 blocking, 1 suggestion
 
 <details>
-<summary>🟡 <code>observability/logs-and-accesslogs.md:412</code> &nbsp;Style guide, Clarity Rules (Name the concrete noun): 'This' points to a sentence, not a noun in the same sentence.</summary>
+<summary>🟡 <code>observability/logs-and-accesslogs.md:412</code> &nbsp;·&nbsp; Style guide: Clarity Rules, name the concrete noun</summary>
 
-Low confidence: the antecedent is adjacent and the sentence reads acceptably.
+**What's wrong:** 'This' points to a sentence, not a noun in the same sentence. Low confidence: the antecedent is adjacent and the sentence reads acceptably.
+
+**Suggested fix:**
 
 ```diff
 - This lets an external program, such as `logrotate`, rotate the access log file.

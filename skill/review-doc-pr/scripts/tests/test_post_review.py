@@ -270,17 +270,29 @@ def test_simple_edit_renders_as_diff_and_has_no_headings_or_tables():
     assert "\n#" not in out and "|---" not in out
 
 
-def test_summary_uses_html_code_not_markdown_backticks():
+def test_collapsed_row_shows_file_and_rule_and_body_has_labelled_parts():
     from scripts import post_review as pr
-    out = pr.render_finding(_f("style", "suggestion", 7, reasoning="Use `uses` not leverages."))
+    f = _f("style", "suggestion", 7, reasoning="Replace leverages with uses.")
+    f["rule"] = "Style guide: Words to avoid"
+    out = pr.render_finding(f)
     summary = out.split("<summary>")[1].split("</summary>")[0]
-    assert "`" not in summary and "<code>uses</code>" in summary
+    assert "page.md:7" in summary and "Style guide: Words to avoid" in summary
+    assert "Replace leverages" not in summary          # reasoning is NOT in the collapsed row
+    assert "**What's wrong:** Replace leverages with uses." in out and "**Suggested fix:**" in out
+
+
+def test_rule_falls_back_to_the_layer_name_and_full_reasoning_is_never_cut():
+    from scripts import post_review as pr
+    long = "Sentence one is long. " * 30
+    out = pr.render_finding(_f("accuracy", "blocking", 3, reasoning=long))
+    assert "Accuracy" in out.split("</summary>")[0]
+    assert " ".join(long.split()) in out
 
 
 def test_multiline_fix_is_not_forced_into_a_diff():
     from scripts import post_review as pr
     out = pr.render_finding(_f("completeness", "suggestion", 1, quote="pkg/x.go: new option", fix="Add:\n\n```markdown\n| a |\n```"))
-    assert "```diff" not in out and "> pkg/x.go: new option" in out and "```markdown" in out
+    assert "```diff" not in out and "**Code change:** pkg/x.go: new option" in out and "```markdown" in out
 
 
 def test_oversized_comment_shortens_fixes_and_says_so():

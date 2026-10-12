@@ -1,1 +1,14 @@
-[{"layer":"style","file":"docs/content/migrate/v3.md","line":48,"quote":"### OpenTelemetry Metrics: exponential histograms","reasoning":"Style guide, Titles and Headings: every heading you add uses Title Case, even on a page whose other headings use another case. The text after the colon is lowercase.","suggested_fix":"### OpenTelemetry Metrics: Exponential Histograms","severity":"suggestion","confidence":0.5,"auto_fixable":false}]
+[
+  {
+    "layer": "style",
+    "file": "docs/content/migrate/v3.md",
+    "line": 48,
+    "quote": "### OpenTelemetry Metrics: exponential histograms",
+    "reasoning": "Every heading you add uses Title Case, even on a page whose other headings use another case. The text after the colon is lowercase.",
+    "suggested_fix": "### OpenTelemetry Metrics: Exponential Histograms",
+    "severity": "suggestion",
+    "confidence": 0.5,
+    "auto_fixable": false,
+    "rule": "Style guide: Titles and Headings"
+  }
+]

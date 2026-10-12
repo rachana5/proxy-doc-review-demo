@@ -42,6 +42,7 @@ same finding as the option it guards.
 - `line`: 1 if the page needs a new section; otherwise the line of the table or heading to extend.
 - `quote`: the code change that creates the gap, for example
   `pkg/middlewares/ratelimiter/rate_limiter.go: new option "maxBurst" (default 1)`.
+- `rule`: `Missing docs: <what changed>`, for example `Missing docs: new maxBackoff option`.
 - `reasoning`: what changed for the user, why it needs docs, and the code `file:line` evidence.
 - `suggested_fix`: the drafted doc text, ready to paste, preceded by one line naming the section
   ("Add a row to the Configuration Options table:").

@@ -8,7 +8,8 @@
     "suggested_fix": "Extend the 'Wildcard subdomain matching' admonition (line 55) with:\n\nThe `Host` matcher also supports a double wildcard prefix (`**.example.com`) to match all subdomains of `example.com`, at any depth: `**.example.com` matches `foo.example.com` and `foo.bar.example.com`, but not `example.com` itself.\n\nA wildcard is valid only as the whole host (`*`, see the exception below), or as a `*.` or `**.` prefix followed by a host without further wildcards. Any other use, such as ``Host(`*.*.example.com`)``, is rejected with an error.\n\nAlso add a row to the examples table: ``Match all subdomains of `example.com`, at any depth.`` | ```Host(`**.example.com`)```.\n\nNote: the TLS-option and v2-syntax statements need checking for `**.` before being added.",
     "severity": "suggestion",
     "confidence": 0.7,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Missing docs: `**.` in Host rules"
   },
   {
     "layer": "completeness",
@@ -19,7 +20,8 @@
     "suggested_fix": "Extend the 'Wildcard subdomain matching' admonition (line 62) with:\n\nThe `HostSNI` matcher also supports a double wildcard prefix (`**.example.com`) to match all subdomains of `example.com`, at any depth: `**.example.com` matches `foo.example.com` and `foo.bar.example.com`, but not `example.com` itself.\n\nAnd add a tab to the examples (near line 92): ```HostSNI(`**.example.com`)```.",
     "severity": "suggestion",
     "confidence": 0.7,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Missing docs: `**.` in HostSNI rules"
   },
   {
     "layer": "completeness",
@@ -30,7 +32,8 @@
     "suggested_fix": "Replace the sentence at line 238 (and the equivalent at tcp/routing/rules-and-priority.md line 210) with:\n\nThe priority is equal to the length of the rule, and so the longest length has the highest priority. The two stars of a double wildcard host (`**.example.com`) do not count, so a router using one has a lower priority than a router using `*.example.com` or an exact host for the same domain.",
     "severity": "suggestion",
     "confidence": 0.75,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Missing docs: default priority with `**.`"
   },
   {
     "layer": "completeness",
@@ -41,6 +44,7 @@
     "suggested_fix": "Extend line 243:\n\nIt is not possible to request a double wildcard certificate for a domain (for example `*.*.local.com` or `**.local.com`). The `**.` prefix is supported by the `Host` and `HostSNI` router matchers only; request a `*.example.com` certificate to cover single-level subdomains.",
     "severity": "suggestion",
     "confidence": 0.7,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Missing docs: ACME rejects `**.` domains"
   }
 ]

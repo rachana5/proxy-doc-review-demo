@@ -1,1 +1,14 @@
-[{"layer":"style","file":"docs/content/reference/install-configuration/observability/logs-and-accesslogs.md","line":412,"quote":"This lets an external program, such as `logrotate`, rotate the access log file.","reasoning":"Style guide, Clarity Rules (Name the concrete noun): 'This' points to a sentence, not a noun in the same sentence. Low confidence: the antecedent is adjacent and the sentence reads acceptably.","suggested_fix":"The reopen step lets an external program, such as `logrotate`, rotate the access log file.","severity":"suggestion","confidence":0.35,"auto_fixable":false}]
+[
+  {
+    "layer": "style",
+    "file": "docs/content/reference/install-configuration/observability/logs-and-accesslogs.md",
+    "line": 412,
+    "quote": "This lets an external program, such as `logrotate`, rotate the access log file.",
+    "reasoning": "'This' points to a sentence, not a noun in the same sentence. Low confidence: the antecedent is adjacent and the sentence reads acceptably.",
+    "suggested_fix": "The reopen step lets an external program, such as `logrotate`, rotate the access log file.",
+    "severity": "suggestion",
+    "confidence": 0.35,
+    "auto_fixable": false,
+    "rule": "Style guide: Clarity Rules, name the concrete noun"
+  }
+]

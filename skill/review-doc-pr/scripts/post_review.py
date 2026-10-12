@@ -127,22 +127,34 @@ def _is_simple_edit(f: dict) -> bool:
     )
 
 
+_LAYER_LABEL = {
+    "accuracy": "Accuracy", "style": "Style guide", "reference": "Links and references",
+    "clarity": "Clarity", "completeness": "Missing docs",
+}
+
+
 def render_finding(f: dict, fix_cap: int | None = None) -> str:
-    headline, rest = _sentences(f.get("reasoning", ""))
-    if len(headline) > 140:
-        headline = headline[:139].rstrip() + "…"
+    """Collapsed row: marker, file:line, the rule that is not being followed.
+    Expanded body: what is wrong, then the suggested fix. Nothing is cut off:
+    the full reasoning is always in the body."""
+    rule = f.get("rule") or _LAYER_LABEL.get(f["layer"], f["layer"].title())
     mark = _SEVERITY_MARK.get(f["severity"], "")
-    summary = f'{mark} <code>{_short_path(f["file"])}:{f["line"]}</code> &nbsp;{_html_inline(headline)}'
+    summary = f'{mark} <code>{_short_path(f["file"])}:{f["line"]}</code> &nbsp;·&nbsp; {_html_inline(rule)}'
     quote, fix = f["quote"].strip(), f["suggested_fix"].strip()
     if fix_cap is not None and len(fix) > fix_cap:
         fix = fix[:fix_cap].rstrip() + "\n\n_(shortened to fit the comment size limit)_"
     parts = [f"<details>\n<summary>{summary}</summary>\n"]
-    if rest:
-        parts.append(f"{rest}\n")
+    parts.append(f"**What's wrong:** {' '.join(str(f.get('reasoning', '')).split())}\n")
     if _is_simple_edit(f):
+        parts.append("**Suggested fix:**\n")
         parts.append(f"```diff\n- {quote}\n+ {fix}\n```\n")
+    elif f["layer"] == "completeness":
+        parts.append(f"**Code change:** {quote}\n")
+        parts.append("**Suggested fix:**\n")
+        parts.append(f"{fix}\n")
     else:
         parts.append("\n".join("> " + line for line in quote.splitlines()) + "\n")
+        parts.append("**Suggested fix:**\n")
         parts.append(f"{fix}\n")
     parts.append("</details>\n")
     return "\n".join(parts)

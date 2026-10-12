@@ -8,6 +8,7 @@
     "suggested_fix": "Add a row to the Configuration Options table, after `initialInterval`:\n\n```markdown\n| <a id=\"opt-maxBackoff\" href=\"#opt-maxBackoff\" title=\"#opt-maxBackoff\">`maxBackoff`</a> | Upper bound on the wait time between two retries. <br /> If unspecified, the wait time is capped at twice the `initialInterval`. <br /> Defined in seconds or as a valid duration format, see [time.ParseDuration](https://golang.org/pkg/time/#ParseDuration). | 0 | No |\n```\n\nAdd `maxBackoff: 1s` to the Structured (YAML), Structured (TOML), Labels, Tags, and Kubernetes examples, next to `initialInterval`, so each format produces the same configuration.\n\nBefore applying: this diff only adds the struct field. `pkg/middlewares/retry/retry.go` does not read `MaxBackoff`, so confirm the behavior and the default before publishing. Also run `make generate` so the generated CRD files pick up the new field; do not edit them by hand.",
     "severity": "suggestion",
     "confidence": 0.7,
-    "auto_fixable": false
+    "auto_fixable": false,
+    "rule": "Missing docs: new `maxBackoff` option"
   }
 ]
