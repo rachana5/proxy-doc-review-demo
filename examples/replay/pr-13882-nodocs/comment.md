@@ -3,7 +3,7 @@
 <details>
 <summary>🟡 <code>certificate-resolvers/acme.md:243</code> &nbsp;Domains starting with <code>**.</code> are now rejected by the ACME provider with an error (sanitizeDomains, provider.go:1062-1065; test provider_test…</summary>
 
-<sub><i>Line 243 only mentions the <code>*.*.local.com</code> double wildcard; a user who adds <code>**.example.com</code> to a route and a certificate domain would hit the new error. Same PR also skips default-cert generation when no valid domain remains (provider.go:621-624), which needs no doc.</i></sub>
+Line 243 only mentions the `*.*.local.com` double wildcard; a user who adds `**.example.com` to a route and a certificate domain would hit the new error. Same PR also skips default-cert generation when no valid domain remains (provider.go:621-624), which needs no doc.
 
 > pkg/provider/acme/provider.go:1062-1065: **. domain rejected, "ACME does not allow '**.' wildcard domain"
 
@@ -16,7 +16,7 @@ It is not possible to request a double wildcard certificate for a domain (for ex
 <details>
 <summary>🟡 <code>routing/rules-and-priority.md:55</code> &nbsp;Host now accepts a double wildcard prefix (<code>**.example.com</code>) matching one or more labels (DomainMatchHostExpression, pkg/muxer/muxer.go:34-…</summary>
 
-<sub><i>The page only documents the single-level <code>*.</code> wildcard. The same PR also makes Host return an error for any other wildcard placement (matcher.go:88-91; tests 'bare double wildcard' <code>Host(</code>**<code>)</code> and 'wildcard not as a prefix' <code>Host(</code>*.*.example.com<code>)</code>, matcher_test.go:271-280), which is user-visible for rules that previously loaded.</i></sub>
+The page only documents the single-level `*.` wildcard. The same PR also makes Host return an error for any other wildcard placement (matcher.go:88-91; tests 'bare double wildcard' `Host(`**`)` and 'wildcard not as a prefix' `Host(`*.*.example.com`)`, matcher_test.go:271-280), which is user-visible for rules that previously loaded.
 
 > pkg/muxer/http/matcher.go:71,88-91 and pkg/muxer/muxer.go:30-37: Host matcher accepts a "**." prefix; other wildcard shapes now rejected
 
@@ -35,7 +35,7 @@ Note: the TLS-option and v2-syntax statements need checking for `**.` before bei
 <details>
 <summary>🟡 <code>routing/rules-and-priority.md:238</code> &nbsp;The default priority is no longer exactly the rule length: for each <code>**.</code> host in the rule the two stars are not counted (DoubleWildcardPen…</summary>
 
-<sub><i>The page states 'The priority is directly equal to the length of the rule', which is now incomplete. The same sentence appears on the TCP page (line 210, HostSNI only).</i></sub>
+The page states 'The priority is directly equal to the length of the rule', which is now incomplete. The same sentence appears on the TCP page (line 210, HostSNI only).
 
 > pkg/muxer/http/mux.go:75-89 and pkg/muxer/tcp/mux.go:96-117: GetRulePriority subtracts muxer.DoubleWildcardPenalty
 
@@ -48,7 +48,7 @@ The priority is equal to the length of the rule, and so the longest length has t
 <details>
 <summary>🟡 <code>routing/rules-and-priority.md:62</code> &nbsp;HostSNI now accepts a <code>**.</code> prefix (regexp at pkg/muxer/tcp/matcher.go:65, tests matcher_test.go:143-172), but the TCP page documents only…</summary>
 
-<sub><i>Whether the double wildcard matches one-or-more labels for SNI goes through the shared muxer.DomainMatchHostExpression, so it follows the same semantics as HTTP.</i></sub>
+Whether the double wildcard matches one-or-more labels for SNI goes through the shared muxer.DomainMatchHostExpression, so it follows the same semantics as HTTP.
 
 > pkg/muxer/tcp/matcher.go:65: hostOrIP = `^(\*\*?\.)?[[:word:]\.\-\:]+$`
 

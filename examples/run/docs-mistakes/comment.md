@@ -12,7 +12,7 @@
 <details>
 <summary>🔴 <code>middlewares/retry.md:101</code> &nbsp;The default is 2 MB, not 1 MB.</summary>
 
-<sub><i><code>RetryDefaultMaxRequestBodyBytes</code> is <code>2 * 1024 * 1024</code> (pkg/config/dynamic/middlewares.go:17) and pkg/middlewares/retry/retry.go:109 uses it when the option is unset.</i></sub>
+`RetryDefaultMaxRequestBodyBytes` is `2 * 1024 * 1024` (pkg/config/dynamic/middlewares.go:17) and pkg/middlewares/retry/retry.go:109 uses it when the option is unset.
 
 ```diff
 - | 1MB | No |
@@ -34,7 +34,7 @@
 <details>
 <summary>🟡 <code>middlewares/retry.md:7</code> &nbsp;Style guide, Words and Phrases to Avoid: rhetorical questions.</summary>
 
-<sub><i>Write a statement.</i></sub>
+Write a statement.
 
 ```diff
 - But what if you need more control?
@@ -46,7 +46,7 @@
 <details>
 <summary>🟡 <code>middlewares/retry.md:7</code> &nbsp;Style guide, Voice: omit "please".</summary>
 
-<sub><i>Style guide, Words and Phrases to Avoid: em dash used as a connector.</i></sub>
+Style guide, Words and Phrases to Avoid: em dash used as a connector.
 
 ```diff
 - Please see the [timeouts guide](../../../routing/not-a-real-page.md) — it covers this.
@@ -58,7 +58,7 @@
 <details>
 <summary>🟡 <code>middlewares/retry.md:7</code> &nbsp;"it" and "this" have no noun in the same sentence.</summary>
 
-<sub><i>A reader scanning the page cannot tell what the guide covers.</i></sub>
+A reader scanning the page cannot tell what the guide covers.
 
 ```diff
 - it covers this

@@ -3,7 +3,7 @@
 <details>
 <summary>🟡 <code>observability/logs-and-accesslogs.md:412</code> &nbsp;Style guide, Clarity Rules (Name the concrete noun): 'This' points to a sentence, not a noun in the same sentence.</summary>
 
-<sub><i>Low confidence: the antecedent is adjacent and the sentence reads acceptably.</i></sub>
+Low confidence: the antecedent is adjacent and the sentence reads acceptably.
 
 ```diff
 - This lets an external program, such as `logrotate`, rotate the access log file.

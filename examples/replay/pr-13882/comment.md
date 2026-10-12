@@ -3,7 +3,7 @@
 <details>
 <summary>🟡 <code>migrate/v3.md:47</code> &nbsp;Style guide, Voice: do not state how a third-party service behaves unless its documentation or the source says so.</summary>
 
-<sub><i>The Go comment (pkg/provider/acme/provider.go:1063) states it, but the migration text gives the reader no link; acme.md already links Let's Encrypt for the related wildcard limit.</i></sub>
+The Go comment (pkg/provider/acme/provider.go:1063) states it, but the migration text gives the reader no link; acme.md already links Let's Encrypt for the related wildcard limit.
 
 ```diff
 - As ACME only issues single-level wildcard certificates, the ACME certificate resolvers refuse a `**.example.com` domain,
@@ -15,7 +15,7 @@
 <details>
 <summary>🟡 <code>routing/rules-and-priority.md:57</code> &nbsp;pkg/muxer/http/matcher.go:88-90 now makes the Host matcher return an error for any wildcard that is not the catch-all <code>*</code> or a <code>*.</code>/<code>**.</code> p…</summary>
 
-<sub><i>That is a user-visible change in what a router rule accepts, and the page does not say where a wildcard may appear. Confirm whether such rules were previously accepted before documenting.</i></sub>
+That is a user-visible change in what a router rule accepts, and the page does not say where a wildcard may appear. Confirm whether such rules were previously accepted before documenting.
 
 > The `Host` matcher supports a wildcard prefix to match the subdomains of a domain.
 
@@ -26,7 +26,7 @@ Add after the wildcard description: "A wildcard is valid only as a leading `*.` 
 <details>
 <summary>🟡 <code>routing/rules-and-priority.md:241</code> &nbsp;Style guide, Clarity Rules: name the concrete noun instead of 'it'.</summary>
 
-<sub><i>In this sentence 'it' could refer to 'The stars', 'this length', or the host; only the host is meant.</i></sub>
+In this sentence 'it' could refer to 'The stars', 'this length', or the host; only the host is meant.
 
 > The stars of a double wildcard host do not count toward this length,
 > so that it always ranks below the single wildcard and the exact hosts it covers:
@@ -39,7 +39,7 @@ so that the double wildcard host always ranks below the single wildcard and the 
 <details>
 <summary>🟡 <code>routing/rules-and-priority.md:219</code> &nbsp;Style guide, Clarity Rules: name the concrete noun instead of 'it'.</summary>
 
-<sub><i>In this sentence 'it' could refer to 'The stars', 'this length', or the host; only the host is meant.</i></sub>
+In this sentence 'it' could refer to 'The stars', 'this length', or the host; only the host is meant.
 
 > The stars of a double wildcard host do not count toward this length,
 > so that it always ranks below the single wildcard and the exact hosts it covers:

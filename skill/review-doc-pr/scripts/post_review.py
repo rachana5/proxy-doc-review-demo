@@ -138,7 +138,7 @@ def render_finding(f: dict, fix_cap: int | None = None) -> str:
         fix = fix[:fix_cap].rstrip() + "\n\n_(shortened to fit the comment size limit)_"
     parts = [f"<details>\n<summary>{summary}</summary>\n"]
     if rest:
-        parts.append(f"<sub><i>{_html_inline(rest)}</i></sub>\n")
+        parts.append(f"{rest}\n")
     if _is_simple_edit(f):
         parts.append(f"```diff\n- {quote}\n+ {fix}\n```\n")
     else:

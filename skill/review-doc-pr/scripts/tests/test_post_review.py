@@ -295,3 +295,10 @@ def test_singular_suggestion_count():
     tmpl = "## Docs review: {{blocking_count}} blocking, {{suggestion_count}} suggestions\n\n{{findings_block}}\n"
     out = pr.render_comment([_f("style", "suggestion", 1)], tmpl)
     assert "1 suggestion\n" in out.split("\n\n")[0] + "\n" and "1 suggestions" not in out
+
+
+def test_extra_reasoning_is_plain_markdown_not_small_italic_html():
+    from scripts import post_review as pr
+    out = pr.render_finding(_f("accuracy", "blocking", 5, reasoning="Wrong default. The code sets `X` to 2 MB."))
+    assert "The code sets `X` to 2 MB." in out
+    assert "<sub>" not in out and "<i>" not in out

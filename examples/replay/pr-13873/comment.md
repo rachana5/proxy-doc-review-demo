@@ -3,7 +3,7 @@
 <details>
 <summary>🟡 <code>migrate/v3.md:48</code> &nbsp;Style guide, Titles and Headings: every heading you add uses Title Case, even on a page whose other headings use another case.</summary>
 
-<sub><i>The text after the colon is lowercase.</i></sub>
+The text after the colon is lowercase.
 
 ```diff
 - ### OpenTelemetry Metrics: exponential histograms
@@ -15,7 +15,7 @@
 <details>
 <summary>🟡 <code>observability/metrics.md:71</code> &nbsp;The PR makes the standard OpenTelemetry environment variable the way to switch these histograms to exponential buckets (otel.go:245-253, te…</summary>
 
-<sub><i>The migrate page and the explicitBoundaries row mention it, but no reference or observe page says how to enable exponential histograms.</i></sub>
+The migrate page and the explicitBoundaries row mention it, but no reference or observe page says how to enable exponential histograms.
 
 > pkg/observability/metrics/otel.go: traefik_*_request_duration_seconds histograms now follow OTEL_EXPORTER_OTLP_METRICS_DEFAULT_HISTOGRAM_AGGREGATION
 
