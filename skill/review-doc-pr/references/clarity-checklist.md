@@ -1,8 +1,9 @@
 # Clarity layer checklist
 
-Goal: judge prose quality against the Reader ID — beginners, DevOps,
-platform engineers, who scan rather than read linearly, looking for
-headings, bold terms, and code blocks.
+Goal: judge prose quality for readers who are beginners, DevOps, and platform engineers, and who
+scan rather than read linearly, looking for headings, bold terms, and code blocks.
+
+Scope: the PR's changed lines only. Do not report prose the PR did not touch.
 
 ## What to check
 
@@ -13,8 +14,8 @@ headings, bold terms, and code blocks.
 - **Ambiguous pronouns**: "it," "this," "that" with no clear antecedent
   within the same sentence or the immediately preceding one.
 - **Scanability**: does a paragraph bury a key term in prose that should be
-  bolded or pulled into a code block/list, given how this Reader ID
-  actually reads docs (scan for headings/bold/code, not full read-through)?
+  bolded or pulled into a code block/list, given how these readers
+  actually read docs (scan for headings/bold/code, not full read-through)?
 
 ## Confidence calibration
 

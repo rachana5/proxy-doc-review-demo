@@ -66,9 +66,7 @@ def sort_findings(findings: list[dict]) -> list[dict]:
 
 def assign_ids(findings: list[dict]) -> list[dict]:
     """Assigns a stable, sequential 1-based id to each finding, in the given
-    order. Findings otherwise have no unique identifier, and the fix-review
-    step (SKILL.md Step 5) needs one so a user can approve a subset by
-    number ("apply 2 and 4") instead of all-or-nothing."""
+    order, so a finding can be referred to by number."""
     for i, finding in enumerate(findings, start=1):
         finding["id"] = i
     return findings

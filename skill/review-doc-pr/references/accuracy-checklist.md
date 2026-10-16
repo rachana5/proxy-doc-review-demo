@@ -1,23 +1,25 @@
 # Accuracy layer checklist
 
-Goal: verify the doc's factual/behavioral claims against the actual source
-code (`traefik-hub` for Hub docs, `traefik/traefik` for Proxy docs).
+Goal: verify the doc's factual and behavioral claims against the source code in this
+repository (`traefik/traefik`).
+
+## Scope
+
+Check claims about what this PR changes, not every claim on the page. On the PR's changed
+lines, check every claim. On the rest of a changed page and on pages the PR does not edit
+(`references/affected-docs-checklist.md`), check only claims about the PR's change set,
+including a sentence far from the edit that the change now contradicts. A wrong claim about
+something the PR did not touch is out of scope: do not report it.
 
 ## What counts as a claim to check
 
 - Default values, valid ranges, and types for any configuration field, flag,
   or parameter.
 - Statements about what a feature does, when it triggers, and what it
-  depends on (e.g. "requires a license," "only available in Kubernetes mode").
+  depends on (e.g. "only available in Kubernetes mode").
 - Statements that something is deprecated, experimental, or GA.
 - Code samples that must actually compile/run against the current API.
-- A diagram depicting an interaction sequence (a sign-in flow, a token
-  exchange, a handshake) — check each arrow against the source the same way
-  a prose claim gets checked, and cross-check it against any diagram of the
-  same established flow already published elsewhere in the doc set. A new,
-  shortened diagram that doesn't match either source is a common way an
-  inaccuracy slips in, since a compressed version of a flow is easy to get
-  wrong in a way the full version wouldn't be.
+- A diagram of an interaction sequence: check each arrow against the source, like a prose claim.
 - In a multi-step chained example, whether the heading number, the code
   example's own identifier (a Kubernetes `metadata.name`, a config key),
   and every later reference to that step by number all agree with each
@@ -42,22 +44,9 @@ code (`traefik-hub` for Hub docs, `traefik/traefik` for Proxy docs).
    forward into `master`, so a field, default, or behavior can differ
    between them. For a PR, the code at the PR head is the primary evidence;
    use the base branch for anything the PR didn't touch.
-6. If a claim traces back to a reviewer's or generator's own suggested
-   wording rather than the doc author's, verify it against source
-   independently rather than trusting it at face value — a suggestion
-   written to fix one problem can introduce a new inaccuracy of its own,
-   most often by merging two behaviorally distinct cases into one sentence
-   that's only accurate for one of them. Treat every claim the same way
-   regardless of who proposed the wording.
-7. A claim about a specific third-party service's or identity provider's
-   runtime behavior (accepts/rejects a parameter, requires a particular
-   field) is not checkable against `traefik-hub` or `traefik/traefik`
-   source at all — the source shows what Hub sends, not how an external
-   server responds. Category it "unverifiable" per step 4 unless the doc
-   itself cites where the behavior was confirmed (a dated test against a
-   named vendor, a linked vendor doc) — a claim with that kind of citation
-   can be treated as sourced, not unverifiable, since the citation is
-   itself the independent source.
+6. A claim about a third-party service's runtime behavior (a DNS provider or ACME server accepts or
+   rejects something) cannot be checked against this repository. Treat it as "unverifiable" per
+   step 4 unless the doc cites where the behavior was confirmed (a linked vendor doc).
 
 ## Confidence calibration
 
@@ -76,9 +65,10 @@ code (`traefik-hub` for Hub docs, `traefik/traefik` for Proxy docs).
 ```json
 {
   "layer": "accuracy",
+  "rule": "Accuracy: default value",
   "quote": "| 1MB | No |",
   "reasoning": "The default is 2 MB. RetryDefaultMaxRequestBodyBytes is 2 * 1024 * 1024 (pkg/config/dynamic/middlewares.go:17) and pkg/middlewares/retry/retry.go:109 uses it when the option is unset.",
-  "suggested_fix": "Change the Default cell to 2MB.",
+  "suggested_fix": "| 2MB | No |",
   "severity": "blocking",
   "confidence": 0.95
 }

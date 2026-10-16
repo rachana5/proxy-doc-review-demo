@@ -314,3 +314,71 @@ def test_extra_reasoning_is_plain_markdown_not_small_italic_html():
     out = pr.render_finding(_f("accuracy", "blocking", 5, reasoning="Wrong default. The code sets `X` to 2 MB."))
     assert "The code sets `X` to 2 MB." in out
     assert "<sub>" not in out and "<i>" not in out
+
+
+def _s(layer="style", line=1, group=None, file="docs/content/a/b/page.md"):
+    f = _f(layer, "suggestion", line)
+    f["file"] = file
+    if group:
+        f["group"] = group
+    return f
+
+
+def test_fewer_than_eight_suggestions_are_never_grouped():
+    from scripts import post_review as pr
+    fs = [_s(line=i, group="`maxBurst`") for i in range(1, 8)]
+    assert all(len(u) == 1 for u in pr.group_findings(fs))
+    assert "related suggestions" not in pr.render_findings_block(fs)
+
+
+def test_eight_or_more_suggestions_group_by_shared_key():
+    from scripts import post_review as pr
+    fs = [_s(line=i, group="`maxBurst`") for i in range(1, 4)] + [_s(line=10 + i) for i in range(5)]
+    units = pr.group_findings(fs)
+    assert sorted(len(u) for u in units) == [1, 1, 1, 1, 1, 3]
+    out = pr.render_findings_block(fs)
+    assert "3 related suggestions" in out and "<code>maxBurst</code>" in out
+    assert out.count("<details>") == 1 + 8   # one group plus each finding stays its own row
+
+
+def test_link_findings_group_by_default_and_a_lone_key_stays_single():
+    from scripts import post_review as pr
+    fs = [_s("reference", i) for i in range(1, 4)] + [_s(line=20 + i) for i in range(4)] + [_s(line=40, group="solo")]
+    units = pr.group_findings(fs)
+    assert sorted(len(u) for u in units) == [1, 1, 1, 1, 1, 3]
+    assert "Links and references" in pr.render_findings_block(fs)
+
+
+def test_blocking_is_never_grouped_and_stays_first():
+    from scripts import post_review as pr
+    blocking = [dict(_f("accuracy", "blocking", i), group="`x`") for i in range(1, 3)]
+    fs = blocking + [_s(line=i, group="`x`") for i in range(1, 9)]
+    units = pr.group_findings(fs)
+    assert [len(u) for u in units[:2]] == [1, 1] and all(u[0]["severity"] == "blocking" for u in units[:2])
+    assert len(units[2]) == 8
+
+
+def test_drop_outside_diff_keeps_affected_findings():
+    from scripts import post_review as pr
+    link = _f("reference", "suggestion", 50)
+    link.update(layer="reference", layers=["reference"], affected=True)
+    old = dict(link, affected=False)
+    assert pr.drop_outside_diff([link, old], {"docs/foo.md": [[1, 5]]}, ["reference"]) == [link]
+
+
+def test_suggestions_are_ordered_by_layer_importance_then_confidence_then_location():
+    from scripts import post_review as pr
+    def mk(layer, line, conf=0.7, file="docs/content/a/b/page.md"):
+        d = _s(layer, line, file=file)
+        d["confidence"] = conf
+        return d
+    fs = [mk("style", 1), mk("reference", 2), mk("completeness", 3, 0.5), mk("completeness", 4, 0.7),
+          mk("accuracy", 90), mk("clarity", 5)]
+    order = [u[0]["layer"] + str(u[0]["line"]) for u in pr.group_findings(fs)]
+    assert order == ["accuracy90", "completeness4", "completeness3", "reference2", "clarity5", "style1"]
+
+
+def test_blocking_still_precedes_a_more_important_layer_suggestion():
+    from scripts import post_review as pr
+    fs = [_s("accuracy", 1), _f("style", "blocking", 50)]
+    assert [u[0]["severity"] for u in pr.group_findings(fs)] == ["blocking", "suggestion"]

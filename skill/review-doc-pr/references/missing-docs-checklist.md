@@ -22,9 +22,11 @@ same finding as the option it guards.
    - a removed or deprecated option
 2. **Skip what isn't user-facing**: refactors, renames of unexported identifiers, logging text,
    performance changes with no behavior difference, test-only helpers. Emit nothing for these.
-3. **Check whether the PR already documents it.** Look in the PR's changed doc files
-   (`docs_changed`) for the option name. If it is there, treat it as covered and leave
-   accuracy to the accuracy layer.
+3. **Check whether the docs already cover it, anywhere.** Use `affected.json` (Step 2b), not
+   only the PR's changed doc files. If the option name is documented in the PR's changed files
+   and on its reference page, it is covered: leave accuracy to the accuracy layer. If it is
+   documented in some places but missing from others (the guide has it, the reference table
+   does not), report the places that are missing, one finding for the change.
 4. **If not covered**, find the right page from `doc_targets` (read the page; `doc_targets` may
    be a directory, then pick the page that documents the option's group). Decide where in the
    page it belongs (the options table, a configuration example, a new section).

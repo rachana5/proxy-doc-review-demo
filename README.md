@@ -8,8 +8,8 @@ When a PR opens, the check posts one comment and never edits the PR or blocks th
 
 | The PR contains | What runs | What is posted |
 |---|---|---|
-| Doc changes | Full review (accuracy, style, reference, clarity, completeness). Missing-docs check too if user-facing code changed. | One comment |
-| User-facing code, no docs | Missing-docs check only | A comment only if docs are needed |
+| Doc changes | Review of the changed lines plus any claim about the changed behavior, on any page (accuracy, style, reference, clarity, completeness). Missing-docs check too if user-facing code changed. | One comment |
+| User-facing code, no docs | Missing-docs check, plus a search of all docs for pages the change makes wrong or incomplete | A comment only if there is a finding |
 | Neither (tests, refactors) | Nothing | Nothing |
 
 Design: [docs/proxy-doc-review-design.md](docs/proxy-doc-review-design.md). Style guide used by the style layer: [docs/proxy-style-guide.md](docs/proxy-style-guide.md). Flow diagram: [docs/2026-10-08-proxy-doc-review-workflow.png](docs/2026-10-08-proxy-doc-review-workflow.png).
@@ -61,7 +61,7 @@ This is a copy of the Hub per-PR review skill with a product **profile** added, 
 
 ```bash
 cd skill/review-doc-pr
-PYTHONPATH=. python3 -m pytest scripts/tests -q          # 189 tests
+PYTHONPATH=. python3 -m pytest scripts/tests -q          # 209 tests
 
 # Classify a PR's files against the Proxy profile
 git diff --name-only origin/master...<branch> | PYTHONPATH=. python3 -m scripts.missing_docs --profile proxy

@@ -1,98 +1,81 @@
 # Completeness layer checklist
 
-Goal: judge whether the page gives the Reader ID everything they need to complete the task or
-make a decision, and whether it follows this repo's established conventions for the kind of change
-it's making. This is not a prose-quality check (`clarity`'s job) and not a claim-vs-source check
-(`accuracy`'s job) — it's "is anything missing that this Reader ID would need, or that this repo
-already has a pattern for?"
+Goal: judge whether what this PR changes is documented completely, and in the way this repo
+documents such changes. This is not a prose check (`clarity`), not a claim-versus-code check
+(`accuracy`), and not a check of whether a page is thorough overall.
 
-## Reader ID and aims (always in scope)
+## Scope
 
-- Readers are beginners, DevOps, and platform engineers. They scan and search rather than read
-  linearly: they look for headings, bold terms, and code blocks, not paragraphs.
-- Every feature set should read like it follows diataxis: a clear getting-started/task path,
-  reference detail, and a place to land when something goes wrong.
-- Aim for complete, concise, up-to-date, developer-friendly content that helps the reader build a
-  mental model of the product, not just complete one step.
+The change set only. Raise a gap the PR creates or widens; never one that was already there.
+For a page the PR does not edit, `references/affected-docs-checklist.md` covers it. Readers are
+beginners, DevOps, and platform engineers who scan for headings, bold terms, and code blocks.
 
 ## What to check
 
-1. **Task-completability.** Could the Reader ID finish this task using only this page and what it
-   links to, with no other tribal knowledge? Look for: an option list that names fields but never
-   shows a real, copy-paste-level usage of them (a full policy, a full command, a full snippet, not
-   just a description of the shape of one); an obvious next question the page invites but doesn't
-   answer ("what if I already have X set up, can I move to this?"); a "described in..." reference
-   whose target doesn't actually cover what's being pointed at.
-2. **Convention adherence.** Does this repo already have an established pattern for this situation
-   that the new content skips? Specifically:
-   - **Version-gating / experimental features.** If the change documents something not yet
-     generally available, is it flagged the way other experimental content is (look under
-     `docs/content/reference/install-configuration/experimental/` for the pattern)? Only raise this
-     when there's a concrete signal the feature is gated (an issue/PR that says so, an
-     `experimental` config path, an untagged version) — never guess at release status. Per the style
-     guide, state version-specific behavior only for versions you verified.
-   - **Migration and deprecation notes.** If the change alters behavior existing users rely on
-     (a changed default, a stricter validation, a removed or renamed option), is there a note under
-     `docs/content/migrate/` (or `docs/content/deprecation/` for deprecations) the way earlier
-     behavior changes got one? A real replayed PR (double wildcard matchers) added exactly such a
-     note in `migrate/v3.md`. Silence on a user-visible breaking change is the failure mode, not the
-     absence of a full guide.
-   - **Every supported format.** If a new option is added to an example, is it added to every
+1. **A usable example.** Does the changed or new option appear in a copy-paste-level example, or
+   only in a description of its shape? Does the page leave the obvious next question about the
+   change unanswered ("what happens to my existing setup?")?
+2. **Convention adherence.** Does this repo already have a pattern for this kind of change that
+   the PR skips?
+   - **Version-gating and experimental features.** If the change documents something not yet
+     generally available, is it flagged the way other experimental content is (see
+     `docs/content/reference/install-configuration/experimental/`)? Only raise this with a
+     concrete signal that the feature is gated (an issue or PR that says so, an `experimental`
+     config path). Never guess at release status, and state version-specific behavior only for
+     versions you verified.
+   - **Migration and deprecation notes.** If the change alters behavior existing users rely on (a
+     changed default, a stricter validation, a removed or renamed option), is there a note under
+     `docs/content/migrate/` (or `docs/content/deprecation/` for deprecations), the way earlier
+     behavior changes got one? Silence on a user-visible breaking change is the failure mode.
+   - **Every supported format.** If an option is added to an example, is it added to every
      format the page shows (Structured YAML/TOML, Labels, Tags, Kubernetes, CLI/Helm for install
-     configuration)? The style guide requires each format to produce the same configuration.
+     configuration)? Every format must produce the same configuration.
    - **Generated reference.** If the change touches an option documented in a generated file
      (`configuration-options.md`, the CRD YAMLs), the fix is the Go struct comment plus
-     `make generate`, not a hand edit. Say so rather than drafting text for the generated file.
-3. **Internal consistency.** When the new content describes two or more parallel things of the same
-   kind (two credentials, two connection types, two failure modes), does it treat them
-   symmetrically? One getting a security/configuration paragraph while its sibling gets none is a
-   gap, even if every individual sentence is accurate and well written.
+     `make generate`, not a hand edit. Say so instead of drafting text for the generated file.
+3. **Symmetry.** When the new content describes two or more parallel things of the same kind (two
+   credentials, two connection types), does it treat them alike? One getting a security or
+   configuration paragraph while its sibling gets none is a gap.
 
-## What NOT to check here
+## What not to check here
 
-- Anything `reference`'s missing-crosslinks judgment already covers: an option that exists in a
-  reference table but isn't pointed to at all from the task page. That's a discoverability/
-  cross-link problem, not a completeness one — leave it there so the two layers don't produce
-  duplicate findings for the same gap.
-- Sentence-level rewrites — that's `clarity`.
-- Anything not actually implied by the Reader ID or a concrete repo convention. A completeness
-  finding needs real evidence (a convention this repo already follows elsewhere, or a specific
-  question the Reader ID would hit), never "this could be more thorough."
+- A missing link to a page that exists: that is `reference`.
+- Sentence-level rewrites: that is `clarity`.
+- Anything without a concrete repo convention or a specific reader question behind it. "This could
+  be more thorough" is not a finding.
 
 ## Process
 
-1. Read the new/changed content in full, plus whatever it links to (the reference page, any
-   linked prerequisite section).
-2. For each check above, note anything missing along with concrete evidence: the repo convention
-   it should match (`file:line`), or the specific unanswered reader question.
-3. Anchor `line`/`quote` to the nearest *existing* text the addition would attach to (a heading, or
-   the sentence right before the gap) — a completeness finding is about absence, so there's no
-   exact span to quote verbatim; anchor to what's already there instead.
-4. Only produce a finding when there's an anchor and concrete evidence. No anchor, no finding.
+1. Read the changed content in full, plus the reference page and any linked prerequisite.
+2. For each check, note what is missing with concrete evidence: the convention it should match
+   (`file:line`) or the specific unanswered question.
+3. Anchor `line` and `quote` to the nearest existing text the addition attaches to (a heading, or
+   the sentence before the gap). A completeness finding is about absence, so there is no exact span
+   to quote.
+4. No anchor, no finding.
 
 ## Confidence calibration
 
-- 0.6–0.8: a real repo convention exists and the new content clearly falls into the situation that
-  convention covers, but applying it involves some judgment (exactly where, how much to say).
-- 0.4–0.6: the gap is real (an unanswered reader question, asymmetric treatment) but there's no
-  established convention to cite — it's a judgment call about what the Reader ID needs.
-- Never above 0.8 — there's no ground truth to confirm against, only a convention or a plausible
-  reader question.
-- `severity`: always `suggestion`. `auto_fixable`: always `false`, regardless of confidence — the
-  fix is new content someone has to write and verify, not a mechanical correction to existing text.
+- 0.6 to 0.8: a real repo convention exists and the change clearly falls under it, though
+  applying it needs judgment (where, how much).
+- 0.4 to 0.6: the gap is real (an unanswered reader question, asymmetric treatment) but no
+  convention exists to cite.
+- Never above 0.8. `severity` is always `suggestion`; `auto_fixable` is always `false`.
 
 ## Example
 
-**New content:** A page section adds a third way to configure a credential, alongside two existing
-ones, and explains how to secure the first new field (auth, TLS) but never mentions whether the
-second new field introduced in the same section carries the same concern.
+The PR adds a third way to configure a credential next to two existing ones, and explains how to
+secure the first new field but never mentions the second new field.
 
 ```json
 {
   "layer": "completeness",
-  "quote": "<heading or sentence the addition would attach to>",
-  "reasoning": "The new section explains how to secure connection A (credentials, TLS) but says nothing about connection B, introduced in the same section with equivalent risk. Same-kind items get asymmetric treatment.",
-  "suggested_fix": "Add a parallel paragraph covering authentication and TLS for connection B, next to the existing paragraph for connection A.",
+  "file": "docs/content/reference/install-configuration/example.md",
+  "line": 42,
+  "rule": "Missing docs: second connection type has no security note",
+  "quote": "<heading or sentence the addition attaches to>",
+  "reasoning": "The new section explains how to secure connection A (credentials, TLS) but says nothing about connection B, introduced in the same section with equivalent risk.",
+  "suggested_fix": "Add a paragraph covering authentication and TLS for connection B, next to the one for connection A.",
   "severity": "suggestion",
   "confidence": 0.7,
   "auto_fixable": false

@@ -1,0 +1,634 @@
+{
+  "terms": [
+    "**.",
+    "HostSNI",
+    "Wildcard",
+    "wildcard"
+  ],
+  "files": [
+    {
+      "file": "docs/content/reference/routing-configuration/tcp/routing/rules-and-priority.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": true,
+      "hit_count": 16,
+      "hits": [
+        {
+          "line": 21,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-HostSNIdomain\" href=\"#opt-HostSNIdomain\" title=\"#opt-HostSNIdomain\">[```HostSNI(`domain`)```](#hostsni-and-hostsniregexp)</a> | Checks if the connection's Server Name Indication is equal "
+        },
+        {
+          "line": 21,
+          "term": "wildcard",
+          "text": "| <a id=\"opt-HostSNIdomain\" href=\"#opt-HostSNIdomain\" title=\"#opt-HostSNIdomain\">[```HostSNI(`domain`)```](#hostsni-and-hostsniregexp)</a> | Checks if the connection's Server Name Indication is equal "
+        },
+        {
+          "line": 45,
+          "term": "HostSNI",
+          "text": "HostSNI(`example.com`) || (HostSNI(`example.org`) && !ALPN(`h2`))"
+        },
+        {
+          "line": 48,
+          "term": "HostSNI",
+          "text": "### HostSNI and HostSNIRegexp"
+        },
+        {
+          "line": 50,
+          "term": "HostSNI",
+          "text": "`HostSNI` and `HostSNIRegexp` matchers allow to match connections targeted to a given domain."
+        },
+        {
+          "line": 54,
+          "term": "HostSNI",
+          "text": "!!! note \"HostSNI & TLS\""
+        },
+        {
+          "line": 58,
+          "term": "HostSNI",
+          "text": "However, there is one special use case for `HostSNI` with non-TLS routers:"
+        },
+        {
+          "line": 60,
+          "term": "HostSNI",
+          "text": "one should use the specific ```HostSNI(`*`)``` syntax."
+        },
+        {
+          "line": 62,
+          "term": "Wildcard",
+          "text": "!!! info \"Wildcard subdomain matching\""
+        },
+        {
+          "line": 64,
+          "term": "HostSNI",
+          "text": "The `HostSNI` matcher supports a single-level wildcard prefix (`*.example.com`) to match any direct subdomain of `example.com`."
+        },
+        {
+          "line": 64,
+          "term": "wildcard",
+          "text": "The `HostSNI` matcher supports a single-level wildcard prefix (`*.example.com`) to match any direct subdomain of `example.com`."
+        },
+        {
+          "line": 67,
+          "term": "wildcard",
+          "text": "A wildcard matches exactly one subdomain label: `*.example.com` matches `foo.example.com` but not `foo.bar.example.com` or `example.com` itself."
+        },
+        {
+          "line": 75,
+          "term": "HostSNI",
+          "text": "```yaml tab=\"HostSNI\""
+        },
+        {
+          "line": 76,
+          "term": "HostSNI",
+          "text": "HostSNI(`*`)"
+        },
+        {
+          "line": 86,
+          "term": "HostSNI",
+          "text": "HostSNI(`example.com`)"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/install-configuration/tls/certificate-resolvers/acme.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": true,
+      "hit_count": 9,
+      "hits": [
+        {
+          "line": 234,
+          "term": "HostSNI",
+          "text": "- Otherwise, the certificate resolver derives the domain name from any `Host()` or `HostSNI()` matchers"
+        },
+        {
+          "line": 241,
+          "term": "wildcard",
+          "text": "[ACME v2](https://community.letsencrypt.org/t/acme-v2-and-wildcard-certificate-support-is-live/55579) supports wildcard certificates."
+        },
+        {
+          "line": 242,
+          "term": "wildcard",
+          "text": "As described in [Let's Encrypt's post](https://community.letsencrypt.org/t/staging-endpoint-for-acme-v2/49605) wildcard certificates can only be generated through a `DNS-01` challenge."
+        },
+        {
+          "line": 243,
+          "term": "wildcard",
+          "text": "It is not possible to request a double wildcard certificate for a domain (for example `*.*.local.com`)."
+        },
+        {
+          "line": 247,
+          "term": "wildcard",
+          "text": "Even though this behavior is [DNS RFC](https://community.letsencrypt.org/t/wildcard-issuance-two-txt-records-for-the-same-name/54528/2) compliant,"
+        },
+        {
+          "line": 251,
+          "term": "wildcard",
+          "text": "The supported `provider` table indicates if they allow generating certificates for a wildcard domain and its root domain."
+        },
+        {
+          "line": 253,
+          "term": "Wildcard",
+          "text": "### Wildcard Domains"
+        },
+        {
+          "line": 255,
+          "term": "wildcard",
+          "text": "[ACME V2](https://community.letsencrypt.org/t/acme-v2-and-wildcard-certificate-support-is-live/55579) supports wildcard certificates."
+        },
+        {
+          "line": 256,
+          "term": "wildcard",
+          "text": "As described in [Let's Encrypt's post](https://community.letsencrypt.org/t/staging-endpoint-for-acme-v2/49605) wildcard certificates can only be generated through a [`DNS-01` challenge](#dnschallenge)"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/http/routing/rules-and-priority.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": true,
+      "hit_count": 7,
+      "hits": [
+        {
+          "line": 25,
+          "term": "wildcard",
+          "text": "| <a id=\"opt-Hostdomain\" href=\"#opt-Hostdomain\" title=\"#opt-Hostdomain\">[```Host(`domain`)```](#host-and-hostregexp)</a> | Matches requests host set to `domain`. Supports wildcard subdomain matching ("
+        },
+        {
+          "line": 55,
+          "term": "Wildcard",
+          "text": "!!! info \"Wildcard subdomain matching\""
+        },
+        {
+          "line": 57,
+          "term": "wildcard",
+          "text": "The `Host` matcher supports a single-level wildcard prefix (`*.example.com`) to match any direct subdomain of `example.com`."
+        },
+        {
+          "line": 60,
+          "term": "wildcard",
+          "text": "A wildcard matches exactly one subdomain label: `*.example.com` matches `foo.example.com` but not `foo.bar.example.com` or `example.com` itself."
+        },
+        {
+          "line": 64,
+          "term": "wildcard",
+          "text": "!!! info \"Exception: a bare wildcard matches every request\""
+        },
+        {
+          "line": 66,
+          "term": "wildcard",
+          "text": "As an exception to the rules above, a bare `*` is not treated as a subdomain wildcard but as a catch-all:"
+        },
+        {
+          "line": 68,
+          "term": "HostSNI",
+          "text": "This mirrors the behaviour of the TCP [``HostSNI(`*`)``](../../tcp/routing/rules-and-priority.md#hostsni-and-hostsniregexp) matcher, so both stay consistent."
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/install-configuration/tls/certificate-resolvers/tailscale.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": true,
+      "hit_count": 1,
+      "hits": [
+        {
+          "line": 174,
+          "term": "HostSNI",
+          "text": "- Otherwise, the certificate resolver derives the domain name from any `Host()` or `HostSNI()` matchers in the router's rule."
+        }
+      ]
+    },
+    {
+      "file": "docs/content/migrate/v3.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 13,
+      "hits": [
+        {
+          "line": 416,
+          "term": "Wildcard",
+          "text": "### Wildcard Host matcher"
+        },
+        {
+          "line": 418,
+          "term": "HostSNI",
+          "text": "From version `v3.7.7` onwards, the `Host` matcher treats a bare `*` as a catch-all, consistent with the TCP `HostSNI(`*`)` matcher."
+        },
+        {
+          "line": 421,
+          "term": "wildcard",
+          "text": "Previously, the `*` was treated as a single wildcard label, so ``Host(`*`)`` only matched hosts made of a single segment (e.g. `localhost`) and not multi-segment hosts (e.g. `example.com`)."
+        },
+        {
+          "line": 600,
+          "term": "HostSNI",
+          "text": "### Wildcard Host and HostSNI"
+        },
+        {
+          "line": 600,
+          "term": "Wildcard",
+          "text": "### Wildcard Host and HostSNI"
+        },
+        {
+          "line": 602,
+          "term": "HostSNI",
+          "text": "Since `v3.7.0`, the `Host` and `HostSNI` matchers support wildcard subdomain matching (e.g., `*.example.com`)."
+        },
+        {
+          "line": 602,
+          "term": "wildcard",
+          "text": "Since `v3.7.0`, the `Host` and `HostSNI` matchers support wildcard subdomain matching (e.g., `*.example.com`)."
+        },
+        {
+          "line": 603,
+          "term": "wildcard",
+          "text": "This allows matching any direct subdomain of a domain with a single-level wildcard prefix."
+        },
+        {
+          "line": 608,
+          "term": "Wildcard",
+          "text": "#### TLSOptions with Wildcard Domains"
+        },
+        {
+          "line": 610,
+          "term": "HostSNI",
+          "text": "Since `v3.7.0`, TLSOptions can now be associated with routers using wildcard `Host` and `HostSNI` matchers (e.g., `Host(`*.example.com`)`)."
+        },
+        {
+          "line": 610,
+          "term": "wildcard",
+          "text": "Since `v3.7.0`, TLSOptions can now be associated with routers using wildcard `Host` and `HostSNI` matchers (e.g., `Host(`*.example.com`)`)."
+        },
+        {
+          "line": 611,
+          "term": "wildcard",
+          "text": "This enables configuring different TLS options for wildcard domains."
+        },
+        {
+          "line": 615,
+          "term": "wildcard",
+          "text": "Note: TLSOptions for `HostRegexp` matchers remains unsupported. Use wildcard `Host` matchers as an alternative."
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/tcp/tls.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 13,
+      "hits": [
+        {
+          "line": 18,
+          "term": "HostSNI",
+          "text": "rule: \"HostSNI(`example.com`)\""
+        },
+        {
+          "line": 33,
+          "term": "HostSNI",
+          "text": "rule = \"HostSNI(`example.com`)\""
+        },
+        {
+          "line": 49,
+          "term": "HostSNI",
+          "text": "- \"traefik.tcp.routers.my-tls-router.rule=HostSNI(`example.com`)\""
+        },
+        {
+          "line": 63,
+          "term": "HostSNI",
+          "text": "\"traefik.tcp.routers.my-tls-router.rule=HostSNI(`example.com`)\","
+        },
+        {
+          "line": 100,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-options\" href=\"#opt-options\" title=\"#opt-options\">`options`</a> | enables fine-grained control of the TLS parameters. It refers to a [TLS Options](../http/tls/tls-options.md) and will be "
+        },
+        {
+          "line": 104,
+          "term": "HostSNI",
+          "text": "## TLS Options and HostSNI"
+        },
+        {
+          "line": 107,
+          "term": "HostSNI",
+          "text": "several TCP routers can serve the same `HostSNI` with different TLS options,"
+        },
+        {
+          "line": 110,
+          "term": "HostSNI",
+          "text": "A TCP router rule is not limited to the `HostSNI` matcher, and the TCP muxer is able to"
+        },
+        {
+          "line": 121,
+          "term": "HostSNI",
+          "text": "rule: \"HostSNI(`example.com`) && ClientIP(`192.168.0.11`)\""
+        },
+        {
+          "line": 126,
+          "term": "HostSNI",
+          "text": "rule: \"HostSNI(`example.com`) && ClientIP(`192.168.0.12`)\""
+        },
+        {
+          "line": 136,
+          "term": "HostSNI",
+          "text": "rule = \"HostSNI(`example.com`) && ClientIP(`192.168.0.11`)\""
+        },
+        {
+          "line": 141,
+          "term": "HostSNI",
+          "text": "rule = \"HostSNI(`example.com`) && ClientIP(`192.168.0.12`)\""
+        },
+        {
+          "line": 151,
+          "term": "HostSNI",
+          "text": "Traefik will automatically obtain and manage TLS certificates for the domains specified in the router's rule (in the `HostSNI` matcher) or in the `tls.domains` configuration (with `tls.domains` taking"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/tcp/routing/router.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 4,
+      "hits": [
+        {
+          "line": 22,
+          "term": "HostSNI",
+          "text": "rule: \"HostSNI(`example.com`)\""
+        },
+        {
+          "line": 41,
+          "term": "HostSNI",
+          "text": "rule = \"HostSNI(`example.com`)\""
+        },
+        {
+          "line": 59,
+          "term": "HostSNI",
+          "text": "- \"traefik.tcp.routers.my-tcp-router.rule=HostSNI(`example.com`)\""
+        },
+        {
+          "line": 74,
+          "term": "HostSNI",
+          "text": "\"traefik.tcp.routers.my-tcp-router.rule=HostSNI(`example.com`)\","
+        }
+      ]
+    },
+    {
+      "file": "docs/content/contributing/security-decisions.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 2,
+      "hits": [
+        {
+          "line": 135,
+          "term": "wildcard",
+          "text": "configuration the operator intended for that host**, including wildcard mappings, mixed-case hosts, and"
+        },
+        {
+          "line": 145,
+          "term": "wildcard",
+          "text": "wildcard and mixed-case hosts), [GHSA-5r4w-85f3-pw66](https://github.com/traefik/traefik/security/advisories/GHSA-5r4w-85f3-pw66) (CVE-2026-48491, SNICheck ignoring wildcard mappings, domain-fronted b"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/getting-started/faq.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 2,
+      "hits": [
+        {
+          "line": 235,
+          "term": "wildcard",
+          "text": "## Why does Let's Encrypt wildcard certificate renewal/generation with DNS challenge fail?"
+        },
+        {
+          "line": 237,
+          "term": "wildcard",
+          "text": "If you're trying to renew wildcard certificates, with DNS challenge,"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/kubernetes/crd/tcp/ingressroutetcp.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 2,
+      "hits": [
+        {
+          "line": 31,
+          "term": "HostSNI",
+          "text": "- match: HostSNI(`*`)"
+        },
+        {
+          "line": 211,
+          "term": "HostSNI",
+          "text": "- match: HostSNI(`*`)"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/other-providers/consul-catalog.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 2,
+      "hits": [
+        {
+          "line": 206,
+          "term": "HostSNI",
+          "text": "traefik.tcp.routers.my-router.rule=HostSNI(`example.com`)"
+        },
+        {
+          "line": 223,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-traefik-tcp-routers-router-name-rule\" href=\"#opt-traefik-tcp-routers-router-name-rule\" title=\"#opt-traefik-tcp-routers-router-name-rule\">`traefik.tcp.routers.<router_name>.rule`</a> | See"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/other-providers/docker.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 2,
+      "hits": [
+        {
+          "line": 246,
+          "term": "HostSNI",
+          "text": "- \"traefik.tcp.routers.my-router.rule=HostSNI(`example.com`)\""
+        },
+        {
+          "line": 263,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-traefik-tcp-routers-router-name-rule\" href=\"#opt-traefik-tcp-routers-router-name-rule\" title=\"#opt-traefik-tcp-routers-router-name-rule\">`traefik.tcp.routers.<router_name>.rule`</a> | See"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/other-providers/ecs.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 2,
+      "hits": [
+        {
+          "line": 217,
+          "term": "HostSNI",
+          "text": "traefik.tcp.routers.my-router.rule=HostSNI(`example.com`)"
+        },
+        {
+          "line": 234,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-traefik-tcp-routers-router-name-rule\" href=\"#opt-traefik-tcp-routers-router-name-rule\" title=\"#opt-traefik-tcp-routers-router-name-rule\">`traefik.tcp.routers.<router_name>.rule`</a> | See"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/other-providers/nomad.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 2,
+      "hits": [
+        {
+          "line": 223,
+          "term": "HostSNI",
+          "text": "traefik.tcp.routers.my-router.rule=HostSNI(`example.com`)"
+        },
+        {
+          "line": 240,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-traefik-tcp-routers-router-name-rule\" href=\"#opt-traefik-tcp-routers-router-name-rule\" title=\"#opt-traefik-tcp-routers-router-name-rule\">`traefik.tcp.routers.<router_name>.rule`</a> | See"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/other-providers/swarm.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 2,
+      "hits": [
+        {
+          "line": 259,
+          "term": "HostSNI",
+          "text": "- \"traefik.tcp.routers.my-router.rule=HostSNI(`example.com`)\""
+        },
+        {
+          "line": 276,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-traefik-tcp-routers-router-name-rule\" href=\"#opt-traefik-tcp-routers-router-name-rule\" title=\"#opt-traefik-tcp-routers-router-name-rule\">`traefik.tcp.routers.<router_name>.rule`</a> | See"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/http/middlewares/compress.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 1,
+      "hits": [
+        {
+          "line": 55,
+          "term": "wildcard",
+          "text": "| <a id=\"opt-defaultEncoding\" href=\"#opt-defaultEncoding\" title=\"#opt-defaultEncoding\">`defaultEncoding`</a> | specifies the default encoding if the `Accept-Encoding` header is not in the request or c"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/http/middlewares/grpcweb.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 1,
+      "hits": [
+        {
+          "line": 59,
+          "term": "wildcard",
+          "text": "| <a id=\"opt-allowOrigins\" href=\"#opt-allowOrigins\" title=\"#opt-allowOrigins\">`allowOrigins`</a> | List of allowed origins. <br /> A wildcard origin `*` can also be configured to match all requests.<b"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/http/middlewares/headers.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 1,
+      "hits": [
+        {
+          "line": 303,
+          "term": "wildcard",
+          "text": "A wildcard origin `*` can also be configured, and matches all requests."
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/kubernetes/crd/tcp/middlewaretcp.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 1,
+      "hits": [
+        {
+          "line": 39,
+          "term": "HostSNI",
+          "text": "- match: HostSNI(`example.com`)"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/kubernetes/ingress-nginx.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 1,
+      "hits": [
+        {
+          "line": 355,
+          "term": "wildcard",
+          "text": "| <a id=\"opt-nginx-ingress-kubernetes-iofrom-to-www-redirect\" href=\"#opt-nginx-ingress-kubernetes-iofrom-to-www-redirect\" title=\"#opt-nginx-ingress-kubernetes-iofrom-to-www-redirect\">`nginx.ingress.ku"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/other-providers/file.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 1,
+      "hits": [
+        {
+          "line": 330,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-tcp-routers-router-name-rule\" href=\"#opt-tcp-routers-router-name-rule\" title=\"#opt-tcp-routers-router-name-rule\">`tcp.routers.<router_name>.rule`</a> | See [rule](../tcp/routing/rules-and"
+        }
+      ]
+    },
+    {
+      "file": "docs/content/reference/routing-configuration/other-providers/kv.md",
+      "in_pr": false,
+      "generated": false,
+      "seed": false,
+      "hit_count": 1,
+      "hits": [
+        {
+          "line": 170,
+          "term": "HostSNI",
+          "text": "| <a id=\"opt-traefiktcproutersmy-routerrule\" href=\"#opt-traefiktcproutersmy-routerrule\" title=\"#opt-traefiktcproutersmy-routerrule\">`traefik/tcp/routers/my-router/rule`</a> | See [entry points](../../"
+        }
+      ]
+    }
+  ],
+  "truncated": false
+}

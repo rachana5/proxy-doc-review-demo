@@ -169,3 +169,11 @@ def test_rule_is_optional_but_validated_when_present():
     assert fd.make_finding(layer="style", file="a.md", line=1, quote="q", reasoning="r",
                            suggested_fix="s", severity="suggestion", confidence=0.5,
                            auto_fixable=False, rule="R")["rule"] == "R"
+
+
+def test_group_and_affected_are_optional_but_typed():
+    base = dict(layer="completeness", file="f.md", line=1, quote="q", reasoning="r",
+                suggested_fix="s", severity="suggestion", confidence=0.5, auto_fixable=False)
+    assert _finding.validate_finding(dict(base, group="`maxBurst`", affected=True)) == []
+    assert any("group" in e for e in _finding.validate_finding(dict(base, group="")))
+    assert any("affected" in e for e in _finding.validate_finding(dict(base, affected="yes")))

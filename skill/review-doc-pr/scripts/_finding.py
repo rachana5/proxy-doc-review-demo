@@ -24,6 +24,7 @@ def make_finding(
     *, layer: str, file: str, line: int, quote: str, reasoning: str,
     suggested_fix: str, severity: str, confidence: float,
     auto_fixable: bool | None = None, rule: str | None = None,
+    group: str | None = None, affected: bool | None = None,
 ) -> dict:
     if layer not in VALID_LAYERS:
         raise ValueError(f"unknown layer: {layer!r} (must be one of {VALID_LAYERS})")
@@ -38,6 +39,10 @@ def make_finding(
     }
     if rule is not None:
         finding["rule"] = rule
+    if group is not None:
+        finding["group"] = group
+    if affected is not None:
+        finding["affected"] = affected
     return finding
 
 
@@ -54,6 +59,10 @@ def validate_finding(finding: dict) -> list[str]:
         errors.append(f"rule must be a non-empty string of at most {MAX_RULE_LEN} characters")
     if "severity" in finding and finding["severity"] not in VALID_SEVERITIES:
         errors.append(f"invalid severity: {finding['severity']!r}")
+    if "group" in finding and not (isinstance(finding["group"], str) and finding["group"].strip()):
+        errors.append(f"group must be a non-empty string, got {finding['group']!r}")
+    if "affected" in finding and not isinstance(finding["affected"], bool):
+        errors.append(f"affected must be a boolean, got {finding['affected']!r}")
     if "confidence" in finding:
         c = finding["confidence"]
         if not isinstance(c, (int, float)) or not (0.0 <= c <= 1.0):

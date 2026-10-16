@@ -9,7 +9,7 @@ MAX_SKILL_LINES = 500
 WORDS_TO_TOKENS = 1.3
 
 REQUIRED_SCRIPTS = {
-    "setup.py", "_discover.py", "changed_lines.py", "_finding.py",
+    "setup.py", "_discover.py", "find_affected_docs.py", "changed_lines.py", "_finding.py",
     "check_links.py", "run_style_lint.py", "aggregate.py", "_git.py",
     "_gh.py", "post_review.py", "pr_filter.py", "profile.py", "missing_docs.py",
 }
@@ -17,6 +17,7 @@ REQUIRED_REFERENCES = {
     "accuracy-checklist.md", "style-checklist.md",
     "reference-checklist.md", "clarity-checklist.md", "finding-schema.md",
     "completeness-checklist.md", "missing-docs-checklist.md", "proxy-style-guide.md",
+    "affected-docs-checklist.md",
 }
 
 
@@ -48,7 +49,7 @@ def test_skill_md_stays_under_token_and_line_budget():
 def test_skill_md_references_every_script_that_exists():
     text = SKILL_MD.read_text()
     for script in REQUIRED_SCRIPTS:
-        assert script in text, f"SKILL.md never mentions {script}"
+        assert script.removesuffix(".py") in text, f"SKILL.md never mentions {script}"
 
 
 def test_skill_md_references_every_reference_file():
@@ -78,10 +79,13 @@ def test_skill_md_does_not_document_a_pr_gate():
     assert "open a pr with these changes" not in text
 
 
-def test_skill_md_documents_per_layer_scope_split():
+def test_skill_md_documents_change_scoped_review_with_affected_pages():
     text = SKILL_MD.read_text().lower()
-    assert "whole file" in text
-    assert "diff-scoped" in text or "changed lines" in text
+    assert "scope rule" in text and "never to a whole file" in text
+    assert "changed lines" in text
+    assert "find_affected_docs" in text and "affected.json" in text
+    # no layer may be described as scanning a whole file any more
+    assert "| whole file" not in text
 
 
 def test_templates_exist():

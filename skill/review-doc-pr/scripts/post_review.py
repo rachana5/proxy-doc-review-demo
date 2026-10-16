@@ -1,25 +1,13 @@
-"""post_review.py — renders review-doc-pr's aggregated findings as one PR
+"""post_review.py: renders review-doc-pr's aggregated findings as one PR
 comment and posts it, unless one from a previous run of this same PR state
 is already there.
 
-This is the only network-writing step in review-doc-pr, and the only place
-the plan's "fires once per PR" contract and the marker-based idempotency
-check actually meet: a marker match means this workflow got invoked twice
-for the same PR (e.g. a CI retry after an infra blip), not a legitimate
-update, so the right behavior is to skip, not to edit the existing comment
-in place. See docs/superpowers/plans/2026-09-17-per-pr-review-skill-plan.md
-(in the automation workspace)'s "New work required" item 2 and the note
-under SKILL.md's Step 6 for the full reasoning.
+This is the only network-writing step. A marker match means the workflow was
+invoked twice for the same PR (for example a CI retry), not a legitimate
+update, so the run skips instead of editing the existing comment.
 
-Reuses aggregate.render_report() (content-reviewer's engine, duplicated
-byte-for-byte into this skill — kept in sync by
-scripts/tests/test_content_reviewer_duplication_sync.py in the
-ai-doc-content-reviewer source repo, not re-verified from inside hub-doc,
-since that test file is deliberately not copied here — see SKILL.md's
-"Bundled resources" for why) for the
-non-empty case; the empty-findings case is this module's own special case,
-since the mustache-ish template has no conditionals to express "no
-findings" without producing an awkward "0 blocking · 0 suggestions" body.
+The empty-findings case is rendered here, since the template has no
+conditionals to express "no findings".
 """
 from __future__ import annotations
 
@@ -49,10 +37,10 @@ def cap_severity_outside_diff(
     own changed-line ranges.
 
     `blocking` is reserved for findings inside the PR's own changed lines
-    (see the plan's "Severity cap for out-of-diff findings" section) — the
-    whole-file accuracy/reference scan's value is surfacing drift the PR
-    happens to touch, not making an unrelated pre-existing issue this PR's
-    problem to fix. This cap applies uniformly to every finding regardless
+    (see the plan's "Severity cap for out-of-diff findings" section). A
+    finding about the PR's change set on a line or page the PR did not edit
+    (an affected reference table, say) is still worth surfacing, but as a
+    suggestion the author may act on, not a blocker. This cap applies uniformly to every finding regardless
     of layer -- nothing needs to check `layer`/`layers` to tell the
     difference. That includes style/clarity: run_style_lint.py actually
     scans the whole file (vale/alex have no notion of "just these lines"),
@@ -81,11 +69,16 @@ def drop_outside_diff(
     lines (a finding merged from several layers is kept if any layer is not
     droppable). Used by profiles whose reference layer scans whole files: an
     old dead link the PR did not touch is not this PR's problem, and listing
-    it makes the comment noisy."""
+    it makes the comment noisy. A finding marked `affected` (for example a link
+    this PR broke by renaming a heading, found on a page the PR did not edit)
+    is relevant to the PR and is kept."""
     if not layers:
         return findings
     kept = []
     for f in findings:
+        if f.get("affected"):
+            kept.append(f)
+            continue
         fl = f.get("layers", [f["layer"]])
         ranges = [tuple(r) for r in changed_ranges.get(f["file"], [])]
         outside = not changed_lines.line_in_ranges(f["line"], ranges)
@@ -160,13 +153,88 @@ def render_finding(f: dict, fix_cap: int | None = None) -> str:
     return "\n".join(parts)
 
 
+GROUP_THRESHOLD = 8  # group related suggestions only when there are 8 or more
+_LINKS_GROUP = "Links and references"
+
+
+def _group_key(f: dict) -> str | None:
+    """Suggestions that share a key are candidates for one grouped row. The agent
+    sets `group` (usually the option or field the findings are about); link
+    findings from the reference layer group together by default."""
+    if f["severity"] == "blocking":
+        return None
+    if f.get("group"):
+        return f["group"].strip()
+    return _LINKS_GROUP if f["layer"] == "reference" else None
+
+
+# Importance of a layer's finding, most important first: a wrong fact, then missing docs,
+# then a broken or missing link, then wording, then style.
+_LAYER_RANK = {"accuracy": 0, "completeness": 1, "reference": 2, "clarity": 3, "style": 4}
+
+
+def _order_key(f: dict) -> tuple:
+    """Blocking first; then by layer importance, highest confidence, and location."""
+    layers = f.get("layers", [f["layer"]])
+    rank = min(_LAYER_RANK.get(l, len(_LAYER_RANK)) for l in layers)
+    return (f["severity"] != "blocking", rank, -f["confidence"], f["file"], f["line"])
+
+
+def group_findings(findings: list[dict], threshold: int = GROUP_THRESHOLD) -> list[list[dict]]:
+    """Order findings into display units: blocking first, one per unit, then
+    suggestions, most important first (see _order_key). With fewer than `threshold` suggestions nothing is grouped.
+    At or above it, suggestions sharing a key (two or more) collapse into one
+    unit placed where its first member would sit. Blocking is never grouped."""
+    ordered = sorted(findings, key=_order_key)
+    suggestions = [f for f in ordered if f["severity"] != "blocking"]
+    if len(suggestions) < threshold:
+        return [[f] for f in ordered]
+    members: dict[str, list[dict]] = {}
+    for f in suggestions:
+        key = _group_key(f)
+        if key:
+            members.setdefault(key, []).append(f)
+    units: list[list[dict]] = []
+    placed: set[str] = set()
+    for f in ordered:
+        key = _group_key(f)
+        if key and len(members.get(key, [])) >= 2:
+            if key not in placed:
+                placed.add(key)
+                units.append(members[key])
+        else:
+            units.append([f])
+    return units
+
+
+def render_group(key: str, members: list[dict], fix_cap: int | None = None) -> str:
+    """One collapsed row that opens to the member findings, each still a
+    collapsed row of its own, so nothing is hidden or merged away."""
+    summary = (f'{_SEVERITY_MARK["suggestion"]} {len(members)} related suggestions'
+               f' &nbsp;·&nbsp; {_html_inline(key)}')
+    inner = "\n".join(render_finding(f, fix_cap) for f in members)
+    return f"<details>\n<summary>{summary}</summary>\n\n{inner}\n</details>\n"
+
+
+def _render_units(units: list[list[dict]], fix_cap: int | None = None) -> str:
+    out = []
+    for unit in units:
+        if len(unit) == 1:
+            out.append(render_finding(unit[0], fix_cap))
+        else:
+            out.append(render_group(_group_key(unit[0]) or "", unit, fix_cap))
+    return "\n".join(out)
+
+
 def render_findings_block(findings: list[dict]) -> str:
-    """Blocking first, then suggestions; within each, by file and line. If the
-    result would exceed the size cap, shorten the longest suggested fixes."""
-    ordered = sorted(findings, key=lambda f: (f["severity"] != "blocking", f["file"], f["line"]))
-    block = "\n".join(render_finding(f) for f in ordered)
+    """Blocking first, then suggestions; within each, by layer importance, then
+    confidence, then file and line. Eight or
+    more suggestions get related ones grouped (see group_findings). If the result
+    would exceed the size cap, shorten the longest suggested fixes."""
+    units = group_findings(findings)
+    block = _render_units(units)
     if len(block) > COMMENT_SIZE_CAP:
-        block = "\n".join(render_finding(f, fix_cap=_FIX_CAP_ON_SHRINK) for f in ordered)
+        block = _render_units(units, fix_cap=_FIX_CAP_ON_SHRINK)
         block += "\n_Some suggested text was shortened to fit the comment size limit._\n"
     return block
 

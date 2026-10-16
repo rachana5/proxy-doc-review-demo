@@ -17,6 +17,8 @@ a link resolves, not whether one is missing.
   topic-pair policy, so most findings here are judgment calls (0.5-0.84).
 - Only report links the PR's own changed lines should have. A missing link on
   a line the PR did not touch is not this PR's problem.
+- Exception, broken links: if the PR renamed or removed a heading or moved a page, a link or
+  anchor to it on another page is this PR's problem. Report it with `affected: true`.
 - Is a "See also" section present where the doc type convention expects one,
   and does it list the right pages?
 

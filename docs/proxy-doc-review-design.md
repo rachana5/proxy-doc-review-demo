@@ -4,8 +4,8 @@
 
 When someone opens a pull request on traefik/traefik, an automated check should do two things:
 
-1. If the pull request changes documentation, review that documentation for accuracy against the code, style, links, clarity, and completeness.
-2. If the pull request changes user-facing code but no documentation, check whether documentation is needed, and if so, suggest where and what to write.
+1. If the pull request changes documentation, review it for accuracy against the code, style, links, clarity, and completeness. The review is limited to what the pull request changes: the changed lines, plus any claim elsewhere about the changed behavior. It does not audit the rest of a page.
+2. If the pull request changes user-facing code, search the whole docs tree for pages that mention what changed, including pages the pull request did not edit (a reference table, a sibling guide, a migration note), and suggest where docs are missing or now wrong, and what to write. Findings on pages the pull request does not edit are always suggestions.
 
 The check posts one comment. It never edits the pull request and never blocks a merge. A person decides what to do with it.
 
