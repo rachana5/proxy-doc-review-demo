@@ -382,3 +382,18 @@ def test_blocking_still_precedes_a_more_important_layer_suggestion():
     from scripts import post_review as pr
     fs = [_s("accuracy", 1), _f("style", "blocking", 50)]
     assert [u[0]["severity"] for u in pr.group_findings(fs)] == ["blocking", "suggestion"]
+
+
+def test_out_writes_the_comment_and_never_posts(monkeypatch, tmp_path, capsys):
+    from scripts import post_review as pr
+    import json
+    called = []
+    monkeypatch.setattr(pr, "post_comment", lambda *a, **k: called.append(a))
+    monkeypatch.setattr(pr, "has_existing_comment", lambda *a, **k: called.append("marker-check") or False)
+    f = tmp_path / "f.json"; f.write_text(json.dumps([_f("style", "suggestion", 1)]))
+    c = tmp_path / "c.json"; c.write_text("{}")
+    tmpl = tmp_path / "t.tmpl"; tmpl.write_text("## {{blocking_count}} blocking, {{suggestion_count}} suggestions\n\n{{findings_block}}\n")
+    out = tmp_path / "comment.md"
+    rc = pr.main(["--repo", "o/r", "--pr", "1", "--findings", str(f), "--changed-lines", str(c),
+                  "--template", str(tmpl), "--out", str(out)])
+    assert rc == 0 and called == [] and "1 suggestion" in out.read_text()

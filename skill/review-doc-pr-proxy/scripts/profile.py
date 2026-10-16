@@ -1,8 +1,7 @@
 """profile.py — load a per-product review profile (profiles/<name>.json).
 
-The review layers are product-neutral; everything that differs between
-Proxy and Hub (docs location, doc engine, style guide, which code counts as
-user-facing, which bot PRs to skip) lives in one JSON file per product.
+Everything product-specific (docs location, doc engine, style guide, which
+code counts as user-facing, which bot PRs to skip) lives in the profile.
 """
 from __future__ import annotations
 

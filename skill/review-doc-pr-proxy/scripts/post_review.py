@@ -36,16 +36,12 @@ def cap_severity_outside_diff(
     "suggestion" for any finding whose (file, line) falls outside the PR's
     own changed-line ranges.
 
-    `blocking` is reserved for findings inside the PR's own changed lines
-    (see the plan's "Severity cap for out-of-diff findings" section). A
+    `blocking` is reserved for findings inside the PR's own changed lines. A
     finding about the PR's change set on a line or page the PR did not edit
     (an affected reference table, say) is still worth surfacing, but as a
     suggestion the author may act on, not a blocker. This cap applies uniformly to every finding regardless
     of layer -- nothing needs to check `layer`/`layers` to tell the
-    difference. That includes style/clarity: run_style_lint.py actually
-    scans the whole file (vale/alex have no notion of "just these lines"),
-    so a style finding CAN land outside the diff -- it still gets capped
-    to `suggestion` by this same generic check, it isn't exempted.
+    difference.
 
     Must run before render_report() is called (whether that's from this
     module or from an `aggregate` CLI invocation upstream of it) --
@@ -293,7 +289,7 @@ def post_comment(repo: str, pr: str, body: str) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Render and post review-doc-pr's findings as one PR comment.")
-    parser.add_argument("--repo", required=True, help="owner/repo, e.g. traefik/hub-doc")
+    parser.add_argument("--repo", required=True, help="owner/repo, e.g. traefik/traefik")
     parser.add_argument("--pr", required=True, help="PR number")
     parser.add_argument("--findings", required=True, help="path to aggregate.py's merged findings JSON")
     parser.add_argument("--changed-lines", required=True, help="path to scripts.changed_lines's output JSON")
@@ -301,6 +297,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--marker", default=MARKER)
     parser.add_argument("--profile", help="product profile; its drop_outside_diff_layers removes out-of-diff findings of those layers")
     parser.add_argument("--classify", help="classify.json from scripts.missing_docs; decides whether any comment is posted at all")
+    parser.add_argument(
+        "--out", help="write the rendered comment to this file and stop: no marker check, no "
+                      "posting. For a workflow that posts the comment itself.")
     parser.add_argument(
         "--dry-run", action="store_true",
         help="print what would be posted instead of calling gh — no marker check either, "
@@ -323,6 +322,11 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     template_text = Path(args.template).read_text()
     body = render_comment(findings, template_text, args.marker)
+
+    if args.out:
+        Path(args.out).write_text(body)
+        print(f"[post_review] wrote the comment to {args.out}; nothing posted.")
+        return 0
 
     if args.dry_run:
         print(body)

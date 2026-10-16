@@ -6,7 +6,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -40,28 +39,6 @@ def check_gh_auth() -> tuple[bool, str]:
     if result.returncode == 0:
         return True, "gh authenticated"
     return False, "gh not authenticated — run `gh auth login`"
-
-
-_ALEX_CONFIG_NAMES = (".alexrc.yaml", ".alexrc.yml", ".alexrc.json", ".alexrc")
-
-
-def check_lint_tools(repo_root: Path) -> dict:
-    """Detect vale/alex as usable FOR THIS REPO — binary on PATH AND a config
-    file at repo_root, both required.
-
-    A binary alone isn't enough: `hub-doc` ships `.vale.ini` + `.alexrc.yaml`,
-    but `traefik/traefik` (the other repo this plugin targets) currently has
-    neither. Without this check, Vale would silently walk up from cwd and
-    pick up whatever `.vale.ini` it finds first (potentially the wrong repo's
-    rules), and alex would run with no config and report false-clean. Missing
-    tools/config are not fatal either way — the style layer degrades to
-    agent-only judgment (see spec's error-handling section) — but the
-    degrade must be based on real per-repo usability, not just PATH."""
-    vale_ok = shutil.which("vale") is not None and (repo_root / ".vale.ini").exists()
-    alex_ok = shutil.which("alex") is not None and any(
-        (repo_root / name).exists() for name in _ALEX_CONFIG_NAMES
-    )
-    return {"vale": vale_ok, "alex": alex_ok}
 
 
 def check_git_status(repo_root: Path) -> tuple[bool, str]:
@@ -115,12 +92,6 @@ def main(argv: list[str] | None = None) -> int:
     print(f"[setup] {'OK' if gh_ok else 'ERROR'}: {gh_msg}")
     if not gh_ok:
         return 1
-
-    lint = check_lint_tools(Path.cwd())
-    for tool, present in lint.items():
-        status = "OK" if present else "WARNING"
-        note = "" if present else " (style layer will degrade to agent-only judgment)"
-        print(f"[setup] {status}: {tool}{note}")
 
     if not args.skip_git_check:
         git_ok, git_msg = check_git_status(Path.cwd())

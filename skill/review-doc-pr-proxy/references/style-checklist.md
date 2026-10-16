@@ -14,7 +14,7 @@ State in the comment which one was used.
   suggest fixing unrelated lines.
 - Every style finding is `severity: suggestion`, regardless of how clear the violation is, and
   `auto_fixable: false`.
-- No Vale/alex for this profile. Judgment is yours, against the guide. Say so in the comment.
+- No linter runs for Proxy. Judgment is yours, against the guide. Say so in the comment.
 - Headings: the guide requires Title Case for every heading and page title, including a heading the PR
   adds to a page whose other headings use another case. Flag a changed or added heading that is not
   Title Case. Never suggest sentence case, and never flag headings the PR did not change.

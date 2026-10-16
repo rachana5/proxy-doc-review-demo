@@ -2,8 +2,8 @@
 # Not for upstream: upstream needs maintainer agreement and a fork-PR security design
 # (see docs/proxy-doc-review-design.md, open items 1 and 2).
 #
-# Setup in the fork: add the repository secret ANTHROPIC_API_KEY, copy skill/review-doc-pr
-# to .claude/skills/review-doc-pr, and (optional) copy the style guide to
+# Setup in the fork: add the repository secret ANTHROPIC_API_KEY, copy skill/review-doc-pr-proxy
+# to .claude/skills/review-doc-pr-proxy, and (optional) copy the style guide to
 # docs/content/contributing/documentation-style-guide.md.
 name: Docs review (demo)
 on:
@@ -27,7 +27,7 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
-            /review-doc-pr ${{ github.event.pull_request.number }} --profile proxy
+            /review-doc-pr-proxy ${{ github.event.pull_request.number }}
           claude_args: |
             --allowedTools "Read,Grep,Glob,Bash(python3:*),Bash(git:*),Bash(gh:*)"
         env:

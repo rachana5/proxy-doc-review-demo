@@ -1,14 +1,13 @@
 """changed_lines.py — parses a unified diff into per-file changed-line
 ranges, using the NEW file's line numbers throughout.
 
-This is the scope boundary between "whole file" and "diff-only" layers
-(see the review-doc-pr plan's per-layer scope table): style and clarity
-need to know which lines are actually new/changed so they don't flag
-prose the PR never touched, while accuracy and reference deliberately
-skip this and read the whole file instead.
+This is the scope boundary for the layers that only look at the PR's own
+lines: style and clarity need to know which lines are actually new/changed
+so they don't flag prose the PR never touched. It also decides which
+findings keep `blocking` severity.
 
 New-file line numbers are used because that's what everything downstream
-already numbers against — Vale/alex output, and the aggregated report's
+already numbers against, such as the aggregated report's
 `line` field — so no old/new translation is needed by callers.
 """
 from __future__ import annotations
